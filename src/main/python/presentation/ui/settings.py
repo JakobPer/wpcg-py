@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'settings.ui'
+# Form implementation generated from reading ui file 'src/main/python/presentation/ui/settings.ui'
 #
-# Created by: PyQt5 UI code generator 5.13.0
+# Created by: PyQt5 UI code generator 5.9.2
 #
 # WARNING! All changes made in this file will be lost!
 
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 
 class Ui_SettingsWindow(object):
     def setupUi(self, SettingsWindow):
@@ -239,35 +237,61 @@ class Ui_SettingsWindow(object):
         self.label_3.setText(_translate("SettingsWindow", "Include NSFW:"))
         self.label_2.setText(_translate("SettingsWindow", "Interval (hh:mm):"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_general), _translate("SettingsWindow", "General"))
-        self.cb_enable_prettification.setToolTip(_translate("SettingsWindow",
-                                                            "<html><head/><body><p>If prettification is enabled, a new wallpaper will be generated where the source image will be put into its center. Unless repeat image in background is checked, the background will be filled with the median edge color of the central image.</p><p><span style=\" font-weight:600;\">Be aware that this option will cost some performance while the wallpaper gets generated and it will slow down wallpaper changing.</span></p></body></html>"))
+        self.cb_enable_prettification.setToolTip(_translate("SettingsWindow", "<html><head/><body><p>If prettification is\n"
+"                                          enabled, a new wallpaper will be generated where the source image will be put\n"
+"                                          into its center. Unless repeat image in background is checked, the background\n"
+"                                          will be filled with the median edge color of the central image.</p><p><span\n"
+"                                          style=\" font-weight:600;\">Be aware that this option will cost\n"
+"                                          some performance while the wallpaper gets generated and it will slow down\n"
+"                                          wallpaper changing.</span></p></body></html>\n"
+"                                      "))
         self.cb_enable_prettification.setText(_translate("SettingsWindow", "Enable prettification"))
         self.gb_prettification.setTitle(_translate("SettingsWindow", "Prettification settings"))
         self.label_8.setText(_translate("SettingsWindow", "Prettification threshold:"))
-        self.dsb_threshold.setToolTip(_translate("SettingsWindow",
-                                                 "<html><head/><body><p>Prettification is only applied if the source image ratio and definded width/height ratio difference exceedes this threshold. Lower values mean the ratio has to be more similar, bigger values mean the ratios can deviate more.</p></body></html>"))
+        self.dsb_threshold.setToolTip(_translate("SettingsWindow", "<html><head/><body><p>Prettification\n"
+"                                                              is only applied if the source image ratio and definded\n"
+"                                                              width/height ratio difference exceedes this threshold.\n"
+"                                                              Lower values mean the ratio has to be more similar, bigger\n"
+"                                                              values mean the ratios can deviate more.</p></body></html>\n"
+"                                                          "))
         self.groupBox_3.setTitle(_translate("SettingsWindow", "Wallpaper size"))
         self.label_7.setText(_translate("SettingsWindow", "Height:"))
         self.label_6.setText(_translate("SettingsWindow", "Width:"))
-        self.sb_width.setToolTip(_translate("SettingsWindow", "The resulting width of the generated wallpaper."))
-        self.sb_height.setToolTip(_translate("SettingsWindow", "The resulting height of the generated wallpaper."))
-        self.cb_repeat_backround.setToolTip(_translate("SettingsWindow",
-                                                       "<html><head/><body><p>If repeat image in background is checked, the source image will be repeated in the background instead of the median color. A gaussian blur can also be applied only to the images in the background if checked.</p></body></html>"))
+        self.sb_width.setToolTip(_translate("SettingsWindow", "The resulting width of the generated wallpaper.\n"
+"                                                              "))
+        self.sb_height.setToolTip(_translate("SettingsWindow", "The resulting height of the generated wallpaper.\n"
+"                                                              "))
+        self.cb_repeat_backround.setToolTip(_translate("SettingsWindow", "<html><head/><body><p>If repeat image\n"
+"                                                      in background is checked, the source image will be repeated in the\n"
+"                                                      background instead of the median color. A gaussian blur can also\n"
+"                                                      be applied only to the images in the background if checked.</p></body></html>\n"
+"                                                  "))
         self.cb_repeat_backround.setText(_translate("SettingsWindow", "Repeat image in background"))
         self.gb_repeat_settings.setTitle(_translate("SettingsWindow", "Repeat settings"))
-        self.cb_blur_background.setToolTip(_translate("SettingsWindow",
-                                                      "<html><head/><body><p>If blur background is selected, a gaussian blur is applied to the background before the central image is composited in.</p></body></html>"))
+        self.cb_blur_background.setToolTip(_translate("SettingsWindow", "<html><head/><body><p>If\n"
+"                                                                  blur background is selected, a gaussian blur is\n"
+"                                                                  applied to the background before the central image is\n"
+"                                                                  composited in.</p></body></html>\n"
+"                                                              "))
         self.cb_blur_background.setText(_translate("SettingsWindow", "Blur background"))
         self.gb_blur_settings.setTitle(_translate("SettingsWindow", "Blur settings"))
         self.label_4.setText(_translate("SettingsWindow", "Amount:"))
-        self.dsb_amount.setToolTip(_translate("SettingsWindow", "The amount of blur that should be applied."))
-        self.cb_blend_edges.setToolTip(_translate("SettingsWindow",
-                                                  "<html><head/><body><p>If blend edges is checked, the edges of the central image are blended with the background to get a smoother transition.</p></body></html>"))
+        self.dsb_amount.setToolTip(_translate("SettingsWindow", "The amount of blur that should\n"
+"                                                                                      be applied.\n"
+"                                                                                  "))
+        self.cb_blend_edges.setToolTip(_translate("SettingsWindow", "<html><head/><body><p>If\n"
+"                                                                              blend edges is checked, the edges of the\n"
+"                                                                              central image are blended with the\n"
+"                                                                              background to get a smoother transition.</p></body></html>\n"
+"                                                                          "))
         self.cb_blend_edges.setText(_translate("SettingsWindow", "Blend edges with background"))
         self.gb_blend_settings.setTitle(_translate("SettingsWindow", "Blend Settings"))
         self.label_5.setText(_translate("SettingsWindow", "Blend ratio:"))
-        self.dsb_blend_ratio.setToolTip(
-            _translate("SettingsWindow", "how many percent of the central image should be blurred. (0=0%, 1=100%)"))
+        self.dsb_blend_ratio.setToolTip(_translate("SettingsWindow", "how many percent of the\n"
+"                                                                                          central image should be\n"
+"                                                                                          blurred. (0=0%, 1=100%)\n"
+"                                                                                      "))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_wallpaper), _translate("SettingsWindow", "Wallpaper"))
         self.btnCancel.setText(_translate("SettingsWindow", "cancel"))
         self.btnOk.setText(_translate("SettingsWindow", "ok"))
+

@@ -2,13 +2,11 @@
 
 # Form implementation generated from reading ui file 'src/main/python/presentation/ui/webDialog.ui'
 #
-# Created by: PyQt5 UI code generator 5.13.0
+# Created by: PyQt5 UI code generator 5.9.2
 #
 # WARNING! All changes made in this file will be lost!
 
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -50,3 +48,4 @@ class Ui_Dialog(object):
         self.label_2.setText(_translate("Dialog", "Enter a Reddit URL to use as wallpaper source. (e.g.: https://www.reddit.com/r/wallpaper)"))
         self.label.setText(_translate("Dialog", "URL:"))
         self.leURL.setText(_translate("Dialog", "https://www.reddit.com/r/wallpaper"))
+
