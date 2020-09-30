@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SettingsWindow</class>
+ <widget class="QMainWindow" name="SettingsWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+       <width>752</width>
+       <height>457</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Settings</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+      <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="0">
+              <widget class="QTabWidget" name="tabWidget">
+                  <property name="currentIndex">
+                      <number>0</number>
+                  </property>
+                  <widget class="QWidget" name="tab_general">
+                      <attribute name="title">
+                          <string>General</string>
+                      </attribute>
+                      <layout class="QVBoxLayout" name="verticalLayout_3">
+                          <item>
+                              <widget class="QLabel" name="label">
+                                  <property name="text">
+                                      <string>Wallpaper Sources:</string>
+                                  </property>
+                              </widget>
+                          </item>
+                          <item>
+                              <layout class="QHBoxLayout" name="horizontalLayout_3">
+                                  <item>
+                                      <widget class="QListWidget" name="lvSources"/>
+                                  </item>
+                                  <item>
+                                      <layout class="QVBoxLayout" name="verticalLayout_2">
+                                          <item>
+                                              <widget class="QPushButton" name="btnAddSource">
+                                                  <property name="maximumSize">
+                                                      <size>
+                                                          <width>50</width>
+                                                          <height>16777215</height>
+                                                      </size>
+                                                  </property>
+                                                  <property name="baseSize">
+                                                      <size>
+                                                          <width>0</width>
+                                                          <height>0</height>
+                                                      </size>
+                                                  </property>
+                                                  <property name="text">
+                                                      <string>+</string>
+                                                  </property>
+                                              </widget>
+                                          </item>
+                                          <item>
+                                              <widget class="QPushButton" name="btnRemoveSource">
+                                                  <property name="maximumSize">
+                                                      <size>
+                                                          <width>50</width>
+                                                          <height>16777215</height>
+                                                      </size>
+                                                  </property>
+                                                  <property name="baseSize">
+                                                      <size>
+                                                          <width>0</width>
+                                                          <height>0</height>
+                                                      </size>
+                                                  </property>
+                                                  <property name="text">
+                                                      <string>-</string>
+                                                  </property>
+                                              </widget>
+                                          </item>
+                                          <item>
+                                              <widget class="QPushButton" name="btEditSource">
+                                                  <property name="maximumSize">
+                                                      <size>
+                                                          <width>50</width>
+                                                          <height>16777215</height>
+                                                      </size>
+                                                  </property>
+                                                  <property name="baseSize">
+                                                      <size>
+                                                          <width>0</width>
+                                                          <height>0</height>
+                                                      </size>
+                                                  </property>
+                                                  <property name="text">
+                                                      <string>edit</string>
+                                                  </property>
+                                              </widget>
+                                          </item>
+                                          <item>
+                                              <widget class="QPushButton" name="btnWeb">
+                                                  <property name="maximumSize">
+                                                      <size>
+                                                          <width>50</width>
+                                                          <height>16777215</height>
+                                                      </size>
+                                                  </property>
+                                                  <property name="text">
+                                                      <string>web</string>
+                                                  </property>
+                                              </widget>
+                                          </item>
+                                          <item>
+                                              <spacer name="verticalSpacer">
+                                                  <property name="orientation">
+                                                      <enum>Qt::Vertical</enum>
+                                                  </property>
+                                                  <property name="sizeHint" stdset="0">
+                                                      <size>
+                                                          <width>20</width>
+                                                          <height>40</height>
+                                                      </size>
+                                                  </property>
+                                              </spacer>
+                                          </item>
+                                      </layout>
+                                  </item>
+                              </layout>
+                          </item>
+                          <item>
+                              <layout class="QGridLayout" name="gridLayout">
+                                  <item row="1" column="3">
+                                      <widget class="QCheckBox" name="cbNSFW">
+                                          <property name="sizePolicy">
+                                              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                                                  <horstretch>0</horstretch>
+                                                  <verstretch>0</verstretch>
+                                              </sizepolicy>
+                                          </property>
+                                          <property name="text">
+                                              <string/>
+                                          </property>
+                                      </widget>
+                                  </item>
+                                  <item row="1" column="1">
+                                      <widget class="QLabel" name="label_3">
+                                          <property name="text">
+                                              <string>Include NSFW:</string>
+                                          </property>
+                                      </widget>
+                                  </item>
+                                  <item row="0" column="3">
+                                      <widget class="QTimeEdit" name="teInterval"/>
+                                  </item>
+                                  <item row="0" column="1">
+                                      <widget class="QLabel" name="label_2">
+                                          <property name="sizePolicy">
+                                              <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                                                  <horstretch>0</horstretch>
+                                                  <verstretch>0</verstretch>
+                                              </sizepolicy>
+                                          </property>
+                                          <property name="text">
+                                              <string>Interval (hh:mm):</string>
+                                          </property>
+                                      </widget>
+                                  </item>
+                                  <item row="0" column="4">
+                                      <spacer name="horizontalSpacer_2">
+                                          <property name="orientation">
+                                              <enum>Qt::Horizontal</enum>
+                                          </property>
+                                          <property name="sizeHint" stdset="0">
+                                              <size>
+                                                  <width>40</width>
+                                                  <height>20</height>
+                                              </size>
+                                          </property>
+                                      </spacer>
+                                  </item>
+                              </layout>
+                          </item>
+                      </layout>
+                  </widget>
+                  <widget class="QWidget" name="tab_wallpaper">
+                      <attribute name="title">
+                          <string>Wallpaper</string>
+                      </attribute>
+                      <layout class="QVBoxLayout" name="verticalLayout_4">
+                          <item>
+                              <widget class="QCheckBox" name="cb_enable_prettification">
+                                  <property name="toolTip">
+                                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If prettification is
+                                          enabled, a new wallpaper will be generated where the source image will be put
+                                          into its center. Unless repeat image in background is checked, the background
+                                          will be filled with the median edge color of the central image.&lt;/p&gt;&lt;p&gt;&lt;span
+                                          style=&quot; font-weight:600;&quot;&gt;Be aware that this option will cost
+                                          some performance while the wallpaper gets generated and it will slow down
+                                          wallpaper changing.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+                                      </string>
+                                  </property>
+                                  <property name="text">
+                                      <string>Enable prettification</string>
+                                  </property>
+                              </widget>
+                          </item>
+                          <item>
+                              <widget class="QGroupBox" name="gb_prettification">
+                                  <property name="title">
+                                      <string>Prettification settings</string>
+                                  </property>
+                                  <layout class="QVBoxLayout" name="verticalLayout">
+                                      <item>
+                                          <layout class="QHBoxLayout" name="horizontalLayout_4">
+                                              <item>
+                                                  <widget class="QLabel" name="label_8">
+                                                      <property name="text">
+                                                          <string>Prettification threshold:</string>
+                                                      </property>
+                                                  </widget>
+                                              </item>
+                                              <item>
+                                                  <widget class="QDoubleSpinBox" name="dsb_threshold">
+                                                      <property name="minimumSize">
+                                                          <size>
+                                                              <width>80</width>
+                                                              <height>0</height>
+                                                          </size>
+                                                      </property>
+                                                      <property name="toolTip">
+                                                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prettification
+                                                              is only applied if the source image ratio and definded
+                                                              width/height ratio difference exceedes this threshold.
+                                                              Lower values mean the ratio has to be more similar, bigger
+                                                              values mean the ratios can deviate more.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+                                                          </string>
+                                                      </property>
+                                                  </widget>
+                                              </item>
+                                              <item>
+                                                  <spacer name="horizontalSpacer_6">
+                                                      <property name="orientation">
+                                                          <enum>Qt::Horizontal</enum>
+                                                      </property>
+                                                      <property name="sizeHint" stdset="0">
+                                                          <size>
+                                                              <width>40</width>
+                                                              <height>20</height>
+                                                          </size>
+                                                      </property>
+                                                  </spacer>
+                                              </item>
+                                          </layout>
+                                      </item>
+                                      <item>
+                                          <widget class="QGroupBox" name="groupBox_3">
+                                              <property name="title">
+                                                  <string>Wallpaper size</string>
+                                              </property>
+                                              <layout class="QGridLayout" name="gridLayout_2">
+                                                  <item row="1" column="0">
+                                                      <widget class="QLabel" name="label_7">
+                                                          <property name="text">
+                                                              <string>Height:</string>
+                                                          </property>
+                                                      </widget>
+                                                  </item>
+                                                  <item row="0" column="2">
+                                                      <spacer name="horizontalSpacer_4">
+                                                          <property name="orientation">
+                                                              <enum>Qt::Horizontal</enum>
+                                                          </property>
+                                                          <property name="sizeHint" stdset="0">
+                                                              <size>
+                                                                  <width>40</width>
+                                                                  <height>20</height>
+                                                              </size>
+                                                          </property>
+                                                      </spacer>
+                                                  </item>
+                                                  <item row="0" column="0">
+                                                      <widget class="QLabel" name="label_6">
+                                                          <property name="text">
+                                                              <string>Width:</string>
+                                                          </property>
+                                                      </widget>
+                                                  </item>
+                                                  <item row="0" column="1">
+                                                      <widget class="QSpinBox" name="sb_width">
+                                                          <property name="sizePolicy">
+                                                              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                                                                  <horstretch>0</horstretch>
+                                                                  <verstretch>0</verstretch>
+                                                              </sizepolicy>
+                                                          </property>
+                                                          <property name="minimumSize">
+                                                              <size>
+                                                                  <width>80</width>
+                                                                  <height>0</height>
+                                                              </size>
+                                                          </property>
+                                                          <property name="toolTip">
+                                                              <string>The resulting width of the generated wallpaper.
+                                                              </string>
+                                                          </property>
+                                                          <property name="maximum">
+                                                              <number>20000</number>
+                                                          </property>
+                                                          <property name="value">
+                                                              <number>1920</number>
+                                                          </property>
+                                                      </widget>
+                                                  </item>
+                                                  <item row="1" column="1">
+                                                      <widget class="QSpinBox" name="sb_height">
+                                                          <property name="sizePolicy">
+                                                              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                                                                  <horstretch>0</horstretch>
+                                                                  <verstretch>0</verstretch>
+                                                              </sizepolicy>
+                                                          </property>
+                                                          <property name="minimumSize">
+                                                              <size>
+                                                                  <width>80</width>
+                                                                  <height>0</height>
+                                                              </size>
+                                                          </property>
+                                                          <property name="toolTip">
+                                                              <string>The resulting height of the generated wallpaper.
+                                                              </string>
+                                                          </property>
+                                                          <property name="maximum">
+                                                              <number>20000</number>
+                                                          </property>
+                                                          <property name="value">
+                                                              <number>1080</number>
+                                                          </property>
+                                                      </widget>
+                                                  </item>
+                                              </layout>
+                                          </widget>
+                                      </item>
+                                      <item>
+                                          <widget class="QCheckBox" name="cb_repeat_backround">
+                                              <property name="toolTip">
+                                                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If repeat image
+                                                      in background is checked, the source image will be repeated in the
+                                                      background instead of the median color. A gaussian blur can also
+                                                      be applied only to the images in the background if checked.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+                                                  </string>
+                                              </property>
+                                              <property name="text">
+                                                  <string>Repeat image in background</string>
+                                              </property>
+                                          </widget>
+                                      </item>
+                                      <item>
+                                          <widget class="QGroupBox" name="gb_repeat_settings">
+                                              <property name="title">
+                                                  <string>Repeat settings</string>
+                                              </property>
+                                              <layout class="QVBoxLayout" name="verticalLayout_5">
+                                                  <item>
+                                                      <widget class="QCheckBox" name="cb_blur_background">
+                                                          <property name="toolTip">
+                                                              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If
+                                                                  blur background is selected, a gaussian blur is
+                                                                  applied to the background before the central image is
+                                                                  composited in.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+                                                              </string>
+                                                          </property>
+                                                          <property name="text">
+                                                              <string>Blur background</string>
+                                                          </property>
+                                                      </widget>
+                                                  </item>
+                                                  <item>
+                                                      <widget class="QGroupBox" name="gb_blur_settings">
+                                                          <property name="title">
+                                                              <string>Blur settings</string>
+                                                          </property>
+                                                          <layout class="QVBoxLayout" name="verticalLayout_6">
+                                                              <item>
+                                                                  <layout class="QHBoxLayout" name="horizontalLayout_2">
+                                                                      <item>
+                                                                          <widget class="QLabel" name="label_4">
+                                                                              <property name="text">
+                                                                                  <string>Amount:</string>
+                                                                              </property>
+                                                                          </widget>
+                                                                      </item>
+                                                                      <item>
+                                                                          <widget class="QDoubleSpinBox"
+                                                                                  name="dsb_amount">
+                                                                              <property name="minimumSize">
+                                                                                  <size>
+                                                                                      <width>80</width>
+                                                                                      <height>0</height>
+                                                                                  </size>
+                                                                              </property>
+                                                                              <property name="toolTip">
+                                                                                  <string>The amount of blur that should
+                                                                                      be applied.
+                                                                                  </string>
+                                                                              </property>
+                                                                          </widget>
+                                                                      </item>
+                                                                      <item>
+                                                                          <spacer name="horizontalSpacer_3">
+                                                                              <property name="orientation">
+                                                                                  <enum>Qt::Horizontal</enum>
+                                                                              </property>
+                                                                              <property name="sizeHint" stdset="0">
+                                                                                  <size>
+                                                                                      <width>40</width>
+                                                                                      <height>20</height>
+                                                                                  </size>
+                                                                              </property>
+                                                                          </spacer>
+                                                                      </item>
+                                                                  </layout>
+                                                              </item>
+                                                              <item>
+                                                                  <widget class="QCheckBox" name="cb_blend_edges">
+                                                                      <property name="toolTip">
+                                                                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If
+                                                                              blend edges is checked, the edges of the
+                                                                              central image are blended with the
+                                                                              background to get a smoother transition.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+                                                                          </string>
+                                                                      </property>
+                                                                      <property name="text">
+                                                                          <string>Blend edges with background</string>
+                                                                      </property>
+                                                                  </widget>
+                                                              </item>
+                                                              <item>
+                                                                  <widget class="QGroupBox" name="gb_blend_settings">
+                                                                      <property name="title">
+                                                                          <string>Blend Settings</string>
+                                                                      </property>
+                                                                      <layout class="QGridLayout" name="gridLayout_5">
+                                                                          <item row="0" column="0">
+                                                                              <widget class="QLabel" name="label_5">
+                                                                                  <property name="text">
+                                                                                      <string>Blend ratio:</string>
+                                                                                  </property>
+                                                                              </widget>
+                                                                          </item>
+                                                                          <item row="0" column="1">
+                                                                              <widget class="QDoubleSpinBox"
+                                                                                      name="dsb_blend_ratio">
+                                                                                  <property name="minimumSize">
+                                                                                      <size>
+                                                                                          <width>80</width>
+                                                                                          <height>0</height>
+                                                                                      </size>
+                                                                                  </property>
+                                                                                  <property name="toolTip">
+                                                                                      <string>how many percent of the
+                                                                                          central image should be
+                                                                                          blurred. (0=0%, 1=100%)
+                                                                                      </string>
+                                                                                  </property>
+                                                                              </widget>
+                                                                          </item>
+                                                                          <item row="0" column="2">
+                                                                              <spacer name="horizontalSpacer_5">
+                                                                                  <property name="orientation">
+                                                                                      <enum>Qt::Horizontal</enum>
+                                                                                  </property>
+                                                                                  <property name="sizeHint" stdset="0">
+                                                                                      <size>
+                                                                                          <width>40</width>
+                                                                                          <height>20</height>
+                                                                                      </size>
+                                                                                  </property>
+                                                                              </spacer>
+                                                                          </item>
+                                                                      </layout>
+                                                                  </widget>
+                                                              </item>
+                                                          </layout>
+                                                      </widget>
+                                                  </item>
+                                              </layout>
+                                          </widget>
+                                      </item>
+                                  </layout>
+                              </widget>
+                          </item>
+                          <item>
+                              <spacer name="verticalSpacer_2">
+                                  <property name="orientation">
+                                      <enum>Qt::Vertical</enum>
+                                  </property>
+                                  <property name="sizeHint" stdset="0">
+                                      <size>
+                                          <width>20</width>
+                                          <height>40</height>
+                                      </size>
+                                  </property>
+                              </spacer>
+                          </item>
+                      </layout>
+                  </widget>
+              </widget>
+          </item>
+          <item row="1" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetDefaultConstraint</enum>
+      </property>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnCancel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>cancel</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnOk">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>ok</string>
+        </property>
+        <property name="default">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

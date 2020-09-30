@@ -1,0 +1,6 @@
+{
+    "app_name": "wpcg",
+    "main_module": "src/main/python/main.py",
+    "author": "JakobPer",
+    "version": "0.0.1"
+}
