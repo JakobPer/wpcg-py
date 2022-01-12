@@ -1,7 +1,4 @@
 # import these three numpy packages as pyinstaller fails if not
-import numpy.random.common
-import numpy.random.bounded_integers
-import numpy.random.entropy
 import imageio as iio
 import numpy as np
 from scipy.ndimage import gaussian_filter

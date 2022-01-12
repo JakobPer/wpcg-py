@@ -53,7 +53,7 @@ class MainController:
             if self.changer is not None:
                 self.changer.reload_wallpaper_list()
 
-    def __init__(self, app, icon: QIcon):
+    def __init__(self, app: QApplication, icon: QIcon):
         """
         Initializes the Wallpaperchanger. Loads settings and wallpapers. Creates TrayIcon and Settings.
 

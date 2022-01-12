@@ -2,13 +2,14 @@ import logging
 import os
 import sys
 
-from fbs_runtime.application_context.PyQt5 import ApplicationContext
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtGui import QIcon
 
 from presentation.controller import main_controller
 from utils import utils
 
 
-class AppContext(ApplicationContext):  # 1. Subclass ApplicationContext
+class AppContext:  # 1. Subclass ApplicationContext
     """
     Application Context used by fbs. For more info check the fbs docs.
     """
@@ -19,8 +20,10 @@ class AppContext(ApplicationContext):  # 1. Subclass ApplicationContext
 
     def run(self):  # 2. Implement run()
         """run method of the fbs app."""
-        self.w = main_controller.MainController(self.app, self.app_icon)
-        return self.app.exec_()  # 3. End run() with this line
+        app = QApplication(sys.argv)
+        icon = QIcon('../icons/icon.ico')
+        self.w = main_controller.MainController(app, icon)
+        return app.exec_()  # 3. End run() with this line
 
 
 if __name__ == '__main__':
