@@ -53,7 +53,7 @@ class MainController:
             if self.changer is not None:
                 self.changer.reload_wallpaper_list()
 
-    def __init__(self, app: QApplication, icon: QIcon):
+    def __init__(self, app: QApplication, icon: QIcon, loadingIcon: QIcon):
         """
         Initializes the Wallpaperchanger. Loads settings and wallpapers. Creates TrayIcon and Settings.
 
@@ -86,6 +86,8 @@ class MainController:
         self.settings_window = SettingsWindowController(self.config, self.changer.wpstore, self.settings_saved)
 
         # create tray icon
+        self.icon = icon
+        self.loading_icon = loadingIcon
         self.trayicon = QSystemTrayIcon()
         self.trayicon.setIcon(icon)
         self.trayicon.activated.connect(self.activated)  # icon double click
@@ -148,13 +150,21 @@ class MainController:
     def action_in_progress(self):
         return self.next_thread.isRunning() or self.previous_thread.isRunning() or self.reload_thread.isRunning()
 
+    def start_loading(self):
+        self.app.setOverrideCursor(Qt.WaitCursor)
+        self.trayicon.setIcon(self.loading_icon)
+
+    def stop_loading(self):
+        self.app.restoreOverrideCursor()
+        self.trayicon.setIcon(self.icon)
+
     def context_next(self):
         """shows next wallpaper."""
         if self.action_in_progress():
             logging.debug("Action in progress, aborting")
             return
 
-        self.app.setOverrideCursor(Qt.WaitCursor)
+        self.start_loading()
         self.next_action.setEnabled(False)
         self.prev_action.setEnabled(False)
         self.settings_action.setEnabled(False)
@@ -168,7 +178,7 @@ class MainController:
             logging.debug("Action in progress, aborting")
             return
 
-        self.app.setOverrideCursor(Qt.WaitCursor)
+        self.start_loading()
         self.next_action.setEnabled(False)
         self.prev_action.setEnabled(False)
         self.settings_action.setEnabled(False)
@@ -180,7 +190,7 @@ class MainController:
         self.next_action.setEnabled(True)
         self.prev_action.setEnabled(True)
         self.settings_action.setEnabled(True)
-        self.app.restoreOverrideCursor()
+        self.stop_loading()
 
     def activated(self, reason):
         """called when the icon is double clicked to change to next wallpaper."""

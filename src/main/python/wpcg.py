@@ -19,7 +19,8 @@ class AppContext:  # 1. Subclass ApplicationContext
     def run(self):  # 2. Implement run()
         app = QApplication(sys.argv)
         icon = QIcon('icons/icon.ico')
-        self.w = main_controller.MainController(app, icon)
+        icon_loading = QIcon('icons/icon_loading.ico')
+        self.w = main_controller.MainController(app, icon, icon_loading)
         return app.exec_()  # 3. End run() with this line
 
 
