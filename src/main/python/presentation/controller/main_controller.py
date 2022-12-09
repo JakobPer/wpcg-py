@@ -113,6 +113,7 @@ class MainController:
 
         # show it
         self.trayicon.show()
+        self.trayicon.setVisible(True)
 
         # start the timer
         self.timer.timeout.connect(self.context_next)
