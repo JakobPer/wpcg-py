@@ -4,7 +4,7 @@ from os import path
 
 import utils.utils as utils
 from data.model.wallpaper_source_model import WallpaperSourceModel
-from PyQt5 import QtCore
+from PyQt6 import QtCore
 
 _mutex = QtCore.QMutex()
 

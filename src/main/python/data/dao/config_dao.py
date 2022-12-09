@@ -4,7 +4,7 @@ import string
 
 import utils.utils as utils
 
-from PyQt5 import QtCore
+from PyQt6 import QtCore
 
 _mutex = QtCore.QMutex()
 

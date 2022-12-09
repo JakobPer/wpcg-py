@@ -2,8 +2,8 @@ import logging
 import os
 import sys
 
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtGui import QIcon
+from PyQt6.QtWidgets import QApplication
+from PyQt6.QtGui import QIcon
 
 from presentation.controller import main_controller
 from utils import utils
@@ -27,7 +27,7 @@ class AppContext:  # 1. Subclass ApplicationContext
             print("Could not find loading icon")
             exit(-1)
         self.w = main_controller.MainController(app, icon, icon_loading)
-        return app.exec_()  # 3. End run() with this line
+        return app.exec() # 3. End run() with this line
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from PyQt5.QtCore import QThread
+from PyQt6.QtCore import QThread
 
 
 def get_app_dir():

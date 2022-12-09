@@ -1,7 +1,7 @@
 import logging
 
-from PyQt5.QtCore import QTime, Qt
-from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QFileDialog, QDialog, QMessageBox
+from PyQt6.QtCore import QTime, Qt
+from PyQt6.QtWidgets import QMainWindow, QListWidgetItem, QFileDialog, QDialog, QMessageBox
 
 from data.dao.config_dao import ConfigDAO
 from data.dao.wallpaper_dao import WallpaperDAO
@@ -93,8 +93,8 @@ class SettingsWindowController(QMainWindow, settings.Ui_SettingsWindow):
         """
         item = SettingsWindowController.SourceListWidgetItem(source)
         item.setText(source.url)
-        item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
-        item.setCheckState(Qt.Checked if source.enabled else Qt.Unchecked)
+        item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
+        item.setCheckState(Qt.CheckState.Checked if source.enabled else Qt.CheckState.Unchecked)
         return item
 
     def closeEvent(self, event):

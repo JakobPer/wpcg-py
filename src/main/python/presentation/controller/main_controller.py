@@ -1,8 +1,8 @@
 import logging
 
-from PyQt5.QtCore import QThread, QTimer, QEvent, Qt
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QSystemTrayIcon, QAction, QMenu, QApplication
+from PyQt6.QtCore import QThread, QTimer, QEvent, Qt
+from PyQt6.QtGui import QIcon, QAction, QCursor
+from PyQt6.QtWidgets import QSystemTrayIcon, QMenu, QApplication
 
 from business.manager.wallpaper_changing_manager import WallpaperChangingManager
 from data.dao.config_dao import ConfigDAO
@@ -152,7 +152,7 @@ class MainController:
         return self.next_thread.isRunning() or self.previous_thread.isRunning() or self.reload_thread.isRunning()
 
     def start_loading(self):
-        self.app.setOverrideCursor(Qt.WaitCursor)
+        self.app.setOverrideCursor(Qt.CursorShape.WaitCursor)
         self.trayicon.setIcon(self.loading_icon)
 
     def stop_loading(self):
@@ -195,7 +195,7 @@ class MainController:
 
     def activated(self, reason):
         """called when the icon is double clicked to change to next wallpaper."""
-        if reason == QSystemTrayIcon.DoubleClick:
+        if reason == QSystemTrayIcon.ActivationReason.DoubleClick:
             self.context_next()
 
     def close(self):
@@ -211,7 +211,7 @@ class MainController:
     def settings_saved(self):
         """called after the settings are saved. Reloads the wallpapers and restarts the timer."""
         logging.debug("Settings saved")
-        self.app.setOverrideCursor(Qt.WaitCursor)
+        self.app.setOverrideCursor(Qt.CursorShape.WaitCursor)
         self.next_action.setEnabled(False)
         self.prev_action.setEnabled(False)
         self.settings_action.setEnabled(False)

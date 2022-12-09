@@ -15,7 +15,7 @@ from data.dao.config_dao import ConfigDAO
 from data.dao.wallpaper_dao import WallpaperDAO
 from utils import utils
 from utils.imageutils import ImageUtils
-from PyQt5 import QtCore
+from PyQt6 import QtCore
 
 if platform.system() == "Windows":
     import ctypes
