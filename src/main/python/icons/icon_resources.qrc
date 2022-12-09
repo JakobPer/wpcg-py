@@ -1,0 +1,10 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>ic_fluent_add_24_filled.svg</file>
+    <file>ic_fluent_delete_24_filled.svg</file>
+    <file>ic_fluent_edit_24_filled.svg</file>
+    <file>ic_fluent_link_24_filled.svg</file>
+    <file>Icon.ico</file>
+    <file>icon_loading.ico</file>
+  </qresource>
+</RCC>
