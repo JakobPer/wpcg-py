@@ -12,10 +12,9 @@ Although it can be used as a standard Python script, I encourage you to create a
 
 ## Dependencies
 
- * Python 3
- * PyQt5
- * fbs
- * PyInstaller
+install the `requirements.txt` with `pip install -r requirements.txt`
+
+The project uses PyQt6 as an UI the UI framework but also had a dependency for pyside6 so we can use the resource compiler that comes with it. Hopefully this will not be necessary in the future.
  
 ### Linux
 
@@ -25,11 +24,11 @@ First install python3 and pip.
 
 Then clone the project to a directory of your liking.
 
-`git clone https://github.com/JakobPer/wpcg.git`
+`git clone https://github.com/JakobPer/wpcg-py.git`
 
 Navigate into the directory and create a python virtual environment to keep your standard environment clean.
 
-`python3 -m venv venv`
+`python3 -m venv .venv`
 
 Activate the venv.
 
@@ -37,11 +36,9 @@ Activate the venv.
 
 If it is activated you see the venv name in front of your shell like `(venv) user@host: `. After that install the dependencies.
 
-`pip install PyQt5 fbs PyInstaller`
+`pip install -r requirements`
 
-Then to generate the binaries call:
-
-`python3 -m fbs freeze`
+Generate the binaries with the provided build scripts.
 
 Binaries will be generated in the directory `target/wpcg`. Then you can generate an installer if you want with `python3 -m fbs installer` or just copy the binary folder to a installation directory of your liking.
 

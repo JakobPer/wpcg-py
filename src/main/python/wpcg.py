@@ -5,9 +5,12 @@ import sys
 from PyQt6.QtWidgets import QApplication
 import PyQt6.QtWidgets as QtWidgets
 from PyQt6.QtGui import QIcon
+import PyQt6.QtCore as QtCore
 
 from presentation.controller import main_controller
 from utils import utils
+
+import icons.rc_icon_resources
 
 
 class AppContext:  # 1. Subclass ApplicationContext
@@ -18,6 +21,7 @@ class AppContext:  # 1. Subclass ApplicationContext
     w = None
 
     def run(self):  # 2. Implement run()
+        QtCore.QDir.addSearchPath('icons', 'icons')
         app = QApplication(sys.argv)
         icon = QIcon('icons/icon.ico')
         if len(icon.availableSizes()) == 0:
