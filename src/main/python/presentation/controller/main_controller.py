@@ -1,7 +1,7 @@
 import logging
 
 from PyQt6.QtCore import QThread, QTimer, QEvent, Qt
-from PyQt6.QtGui import QIcon, QAction, QCursor
+from PyQt6.QtGui import QIcon, QAction
 from PyQt6.QtWidgets import QSystemTrayIcon, QMenu, QApplication
 
 from business.manager.wallpaper_changing_manager import WallpaperChangingManager

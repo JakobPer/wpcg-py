@@ -3,6 +3,7 @@ import os
 import sys
 
 from PyQt6.QtWidgets import QApplication
+import PyQt6.QtWidgets as QtWidgets
 from PyQt6.QtGui import QIcon
 
 from presentation.controller import main_controller

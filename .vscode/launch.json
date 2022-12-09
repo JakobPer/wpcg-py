@@ -13,5 +13,13 @@
             "cwd": "${workspaceFolder}/src/main/python",
             "justMyCode": true
         },
+        {
+            "name": "build ui",
+            "type": "python",
+            "request": "launch",
+            "program": "build-ui.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
     ]
 }
