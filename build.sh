@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
-echo "- clean target dir"
-python -m fbs clean
 
 ./build-ui.sh
 
-echo "- building binary"
-python -m fbs freeze
+pyinstaller -y --noconsole -i ./src/main/python/icons/Icon.ico --add-data "src/main/python/icons;icons" ./src/main/python/wpcg.py
