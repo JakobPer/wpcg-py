@@ -163,8 +163,8 @@ class SettingsWindowController(QMainWindow, settings.Ui_SettingsWindow):
         if source.url.startswith("http"):
             dialog = WebDialogController()
             dialog.leURL.setText(source.url)
-            ret = dialog.exec_()
-            if ret == QDialog.Accepted:
+            ret = dialog.exec()
+            if ret == QDialog.DialogCode.Accepted:
                 folder = dialog.leURL.text()
             else:
                 return
@@ -191,8 +191,8 @@ class SettingsWindowController(QMainWindow, settings.Ui_SettingsWindow):
         Called when the web button is pressed. Shows a dialog to set the reddit URL.
         """
         dialog = WebDialogController()
-        ret = dialog.exec_()
-        if ret == QDialog.Accepted:
+        ret = dialog.exec()
+        if ret == QDialog.DialogCode.Accepted:
             url = dialog.leURL.text()
             source = WallpaperSourceModel(-1, url)
             self.lvSources.addItem(self.create_list_item(source))

@@ -1,7 +1,7 @@
 import logging
 
 from PyQt6.QtCore import QThread, QTimer, QEvent, Qt
-from PyQt6.QtGui import QIcon, QAction
+from PyQt6.QtGui import QIcon, QAction, QPixmap
 from PyQt6.QtWidgets import QSystemTrayIcon, QMenu, QApplication
 
 from business.manager.wallpaper_changing_manager import WallpaperChangingManager
@@ -94,20 +94,29 @@ class MainController:
         self.trayicon.event = self.trayEvent
 
         # context menu actions of the icon
-        self.settings_action = QAction("Settings")
+        settingsIcon = QIcon()
+        settingsIcon.addPixmap(QPixmap(':icons/ic_fluent_settings_24_filled.svg'), QIcon.Mode.Normal, QIcon.State.Off)
+        self.settings_action = QAction(settingsIcon, "Settings")
         self.settings_action.triggered.connect(self.show_settings)
-        self.next_action = QAction("Next wallpaper")
+
+        nextIcon = QIcon()
+        nextIcon.addPixmap(QPixmap(':icons/ic_fluent_arrow_right_24_filled.svg'), QIcon.Mode.Normal, QIcon.State.Off)
+        self.next_action = QAction(nextIcon, "Next wallpaper")
         self.next_action.triggered.connect(self.context_next)
-        self.prev_action = QAction("Previous wallpaper")
+
+        prevIcon = QIcon()
+        prevIcon.addPixmap(QPixmap(':icons/ic_fluent_arrow_left_24_filled.svg'), QIcon.Mode.Normal, QIcon.State.Off)
+        self.prev_action = QAction(prevIcon, "Previous wallpaper")
         self.prev_action.triggered.connect(self.context_previous)
+
         self.exit_action = QAction("Exit")
         self.exit_action.triggered.connect(self.close)
 
         # create the context menu
         self.menu = QMenu()
-        self.menu.addAction(self.settings_action)
         self.menu.addAction(self.next_action)
         self.menu.addAction(self.prev_action)
+        self.menu.addAction(self.settings_action)
         self.menu.addAction(self.exit_action)
         self.trayicon.setContextMenu(self.menu)
 
@@ -125,13 +134,13 @@ class MainController:
         if not self.config.contains_key(ConfigDAO.KEY_PRETTIFICATION_THRESHOLD):
             self.config.set(ConfigDAO.KEY_PRETTIFICATION_THRESHOLD, 0.1)
         if not self.config.contains_key(ConfigDAO.KEY_PRETTIFICATION_ENABLED):
-            self.config.set(ConfigDAO.KEY_PRETTIFICATION_ENABLED, str(False))
+            self.config.set(ConfigDAO.KEY_PRETTIFICATION_ENABLED, str(True))
         if not self.config.contains_key(ConfigDAO.KEY_REPEAT_BACKGROUND_ENABLED):
-            self.config.set(ConfigDAO.KEY_REPEAT_BACKGROUND_ENABLED, str(False))
+            self.config.set(ConfigDAO.KEY_REPEAT_BACKGROUND_ENABLED, str(True))
         if not self.config.contains_key(ConfigDAO.KEY_BLUR_BACKGROUND_ENABLED):
-            self.config.set(ConfigDAO.KEY_BLUR_BACKGROUND_ENABLED, str(False))
+            self.config.set(ConfigDAO.KEY_BLUR_BACKGROUND_ENABLED, str(True))
         if not self.config.contains_key(ConfigDAO.KEY_BLEND_EDGES_ENABLED):
-            self.config.set(ConfigDAO.KEY_BLEND_EDGES_ENABLED, str(False))
+            self.config.set(ConfigDAO.KEY_BLEND_EDGES_ENABLED, str(True))
         if not self.config.contains_key(ConfigDAO.KEY_WALLPAPER_WIDTH):
             self.config.set(ConfigDAO.KEY_WALLPAPER_WIDTH, 1920)
         if not self.config.contains_key(ConfigDAO.KEY_WALLPAPER_HEIGHT):
