@@ -183,7 +183,7 @@ class SettingsWindowController(QMainWindow, settings.Ui_SettingsWindow):
         :param item: the changed item
         """
         source = item.source
-        source.enabled = item.checkState() == Qt.Checked
+        source.enabled = item.checkState() == Qt.CheckState.Checked
         self.wpstore.update_source(source)
 
     def web_pressed(self):
