@@ -52,8 +52,7 @@ class WallpaperChangingManager:
         """
         with QtCore.QMutexLocker(_mutex):
             wpsources = self.wpstore.get_sources(only_enabled=True)
-            self.providers = provider.get_providers(wpsources, self.wpstore, self.download_dir,
-                                                    self.config.get(ConfigDAO.KEY_NSFW, False))
+            self.providers = provider.get_providers(wpsources, self.wpstore, self.download_dir)
             for prov in self.providers:
                 prov.reload()
 

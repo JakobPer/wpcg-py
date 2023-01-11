@@ -17,9 +17,8 @@ import requests
 
 class Provider:
 
-    def __init__(self, source: WallpaperSourceModel, wpstore: WallpaperDAO, download_dir: string, nsfw=False):
+    def __init__(self, source: WallpaperSourceModel, wpstore: WallpaperDAO, download_dir: string):
         self.source = source
-        self.nsfw = nsfw
         self.wpstore = wpstore
         self.download_dir = download_dir
 
@@ -43,9 +42,9 @@ class Provider:
 
 class FileProvider(Provider):
 
-    def __init__(self, source: WallpaperSourceModel, wpstore: WallpaperDAO, download_dir: string, nsfw=False):
+    def __init__(self, source: WallpaperSourceModel, wpstore: WallpaperDAO, download_dir: string):
 
-        super().__init__(source, wpstore, download_dir, nsfw)
+        super().__init__(source, wpstore, download_dir)
         self.wplist = []
 
     def reload(self):
@@ -88,10 +87,10 @@ class FileProvider(Provider):
 
 class RedditProvider(Provider):
 
-    def __init__(self, source: WallpaperSourceModel, wpstore: WallpaperDAO, download_dir: string, nsfw=False):
+    def __init__(self, source: WallpaperSourceModel, wpstore: WallpaperDAO, download_dir: string):
         if not source.url.startswith("http"):
             raise Exception("Not a http/s URL")
-        super().__init__(source, wpstore, download_dir, nsfw)
+        super().__init__(source, wpstore, download_dir)
         self.wplist = []
 
     def reload(self):
@@ -108,7 +107,7 @@ class RedditProvider(Provider):
         ))
         logging.debug("Parsing reddit url: %s", url)
         # get reddit json
-        cookie = {"over18": "1" if self.nsfw else "0"}
+        cookie = {"over18": "0" } # disable nsfw stuff
         try:
             r = requests.get(url, headers={'User-agent': 'wpcg test'}, cookies=cookie)
             j = r.json()
@@ -117,7 +116,7 @@ class RedditProvider(Provider):
                 over18 = elem['data']['over_18']
                 if self.is_image(url):
                     # if it is an image add it to the list
-                    if self.nsfw or not over18:
+                    if not over18:
                         self.wplist.append(url)
         except Exception as e:
             logging.error("Could not get reddit page %s", url)
@@ -162,12 +161,12 @@ class RedditProvider(Provider):
         return target
 
 
-def get_providers(sources: List[WallpaperSourceModel], wp_dao: WallpaperDAO, wallpaper_dir: string, nsfw: bool) \
+def get_providers(sources: List[WallpaperSourceModel], wp_dao: WallpaperDAO, wallpaper_dir: string) \
         -> List[Provider]:
     providers = []
     for source in sources:
         if source.url.startswith("http"):
-            providers.append(RedditProvider(source, wp_dao, wallpaper_dir, nsfw))
+            providers.append(RedditProvider(source, wp_dao, wallpaper_dir))
         else:
-            providers.append(FileProvider(source, wp_dao, wallpaper_dir, nsfw))
+            providers.append(FileProvider(source, wp_dao, wallpaper_dir))
     return providers
