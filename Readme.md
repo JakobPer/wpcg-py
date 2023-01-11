@@ -1,14 +1,20 @@
-# wpcg - a simple random wallpaper changer
+# wpcg-py - a simple random wallpaper changer
 
-wpcg is a randmo wallpaper changed developed in Python3 with Qt5 for the GUI. It shows you all the wallpapers in the defined directory randomly and never shows you a wallpaper twice, unless all the wallpapers were already shown. It does that by keeping a history of shown wallpapers in a Sqlite3 database. It also comes with 5 default wallpaper.
+wpcg-py is a random wallpaper changed developed in Python3 with Qt6 for the GUI. It shows you all the wallpapers in the defined directory randomly and never shows you a wallpaper twice, unless all the wallpapers were already shown. It does that by keeping a history of shown wallpapers in a Sqlite3 database.
+
+It supports different wallpaper sources that can be enabled separately. Check the wiki for current sources.
+
+Wallpaper 'beautification' is also available if enabled. This allows for images that do not fit the screens aspect ratio to be be repeated, blurred and or blended to create a better fitting wallpaper.
 
 Currently supported operating Systems:
- * Windows 10 (others are not tested but might also work)
- * Linux (Cinnamon, Gnome 3)
+ * Windows 10/11 (others are not tested but might also work)
+ * Linux [not tested _yet_] (Cinnamon, Gnome 3)
 
 # Building the app
 
-Although it can be used as a standard Python script, I encourage you to create a binary and or installer, so you can easily add it to your startup programs. For that I use the fbs python package, instructions follow below.
+Although it can be used as a standard Python script, I encourage you to create a binary and so you can easily add it to your startup programs.
+
+Some build scripts are provided, though a better build system will be implemented sometime.
 
 ## Dependencies
 
@@ -32,23 +38,41 @@ Navigate into the directory and create a python virtual environment to keep your
 
 Activate the venv.
 
-`source venv/bin/activate`
+`source .venv/bin/activate`
 
-If it is activated you see the venv name in front of your shell like `(venv) user@host: `. After that install the dependencies.
+If it is activated you see the venv name in front of your shell like `(.venv) user@host: `. After that install the dependencies.
 
 `pip install -r requirements`
 
 Generate the binaries with the provided build scripts.
 
-Binaries will be generated in the directory `target/wpcg`. Then you can generate an installer if you want with `python3 -m fbs installer` or just copy the binary folder to a installation directory of your liking.
+`buid.sh`
+
+The resulting binary will be in the dist folder.
 
 Then you can add the binary to your startup projects
 
 ### Windows
 
-Most of the commands are the same on Windows. You only have to download Python3 form the website. The command to activate the venv is `call venv\scripts\activate.bat`. everything else is the same.
+For windows building is mostly similar. First install Python version >= 3.10 from the website.
 
-If you want to create an installer on windows you also have to install NSIS (https://nsis.sourceforge.io/Main_Page). For further information consult the fbs-tutorial and documentation (https://github.com/mherrmann/fbs-tutorial). 
+Open a powershell and create the venv with
+
+`python -m venv .venv`
+
+Then activate it with
+
+`.venv\Scripts\Activate.ps1`
+
+Install the dependencies
+
+`pip install -r requirements.txt`
+
+Build the app with the build script
+
+`.\build.ps1`
+
+Binaries will also be in the dist folder
 
 # Usage
 
@@ -59,4 +83,4 @@ In the settings you can the define the wallpaper directory and the interval in w
 
 # Development
 
-If you want to contribute to the project, you can use PyCharm as an IDE. The project files are checked in.
+If you want to contribute to the project, you can use VSCode or PyCharm as an IDE. The project files are checked in.
