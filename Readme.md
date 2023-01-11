@@ -20,6 +20,8 @@ Currently supported operating Systems:
 ### Prettified wallpaper
 
  ![Prettifies wallpaper](images/pretty.png)
+ 
+ [Source](https://www.pexels.com/de-de/foto/feld-wald-baume-gras-14402634/)
 
 # Building the app
 
