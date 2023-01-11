@@ -1,5 +1,7 @@
 # wpcg-py - a simple random wallpaper changer
 
+This project has started as a personal project and improvements have been made here and there because of lack of time. Do not expect frequent updates. It is still in beta but the application is usable in its current state.
+
 wpcg-py is a random wallpaper changed developed in Python3 with Qt6 for the GUI. It shows you all the wallpapers in the defined directory randomly and never shows you a wallpaper twice, unless all the wallpapers were already shown. It does that by keeping a history of shown wallpapers in a Sqlite3 database.
 
 It supports different wallpaper sources that can be enabled separately. Check the wiki for current sources.
