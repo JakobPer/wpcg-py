@@ -12,6 +12,13 @@ Currently supported operating Systems:
  * Windows 10/11 (others are not tested but might also work)
  * Linux [not tested _yet_] (Cinnamon, Gnome 3)
 
+### Settings 
+ ![Settings](images/settings.jpg)
+
+### Prettified wallpaper
+
+ ![Prettifies wallpaper](images/pretty.png)
+
 # Building the app
 
 Although it can be used as a standard Python script, I encourage you to create a binary and so you can easily add it to your startup programs.
