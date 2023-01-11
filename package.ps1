@@ -1,0 +1,1 @@
+Compress-Archive -Force -LiteralPath '.\dist\wpcg' -DestinationPath '.\dist\wpcg.zip'
