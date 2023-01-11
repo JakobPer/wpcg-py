@@ -154,26 +154,6 @@
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout">
-          <item row="1" column="3">
-           <widget class="QCheckBox" name="cbNSFW">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLabel" name="label_3">
-            <property name="text">
-             <string>Include NSFW:</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="3">
            <widget class="QTimeEdit" name="teInterval">
             <property name="minimumSize">

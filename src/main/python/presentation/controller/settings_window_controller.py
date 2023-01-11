@@ -125,7 +125,6 @@ class SettingsWindowController(QMainWindow, settings.Ui_SettingsWindow):
         time = self.teInterval.time()
         interval = time.msecsSinceStartOfDay()
         self.config.set(ConfigDAO.KEY_INTERVAL, interval)
-        self.config.set(ConfigDAO.KEY_NSFW, str(self.cbNSFW.isChecked()))
         self.config.set(ConfigDAO.KEY_PRETTIFICATION_ENABLED, str(self.cb_enable_prettification.isChecked()))
         self.config.set(ConfigDAO.KEY_REPEAT_BACKGROUND_ENABLED, str(self.cb_repeat_backround.isChecked()))
         self.config.set(ConfigDAO.KEY_BLUR_BACKGROUND_ENABLED, str(self.cb_blur_background.isChecked()))
@@ -230,8 +229,6 @@ class SettingsWindowController(QMainWindow, settings.Ui_SettingsWindow):
         for source in wpsources:
             self.lvSources.addItem(self.create_list_item(source))
         interval = int(self.config.get(ConfigDAO.KEY_INTERVAL, "0"))
-        nsfwset = self.config.get(ConfigDAO.KEY_NSFW, "False")
-        nsfw = True if nsfwset == "True" else False
         self.prettification_enabled = self.config.get(ConfigDAO.KEY_PRETTIFICATION_ENABLED, "False") == "True"
         self.repeat_background_enabled = self.config.get(ConfigDAO.KEY_REPEAT_BACKGROUND_ENABLED, "False") == "True"
         self.blur_background_enabled = self.config.get(ConfigDAO.KEY_BLUR_BACKGROUND_ENABLED, "False") == "True"
@@ -245,7 +242,6 @@ class SettingsWindowController(QMainWindow, settings.Ui_SettingsWindow):
         time = QTime(0, 0)
         time = time.addMSecs(interval)
         self.teInterval.setTime(time)
-        self.cbNSFW.setChecked(nsfw)
 
         self.cb_enable_prettification.setChecked(self.prettification_enabled)
         self.cb_repeat_backround.setChecked(self.repeat_background_enabled)
