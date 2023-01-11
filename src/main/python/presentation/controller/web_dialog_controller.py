@@ -1,3 +1,8 @@
+# wpcg-py, a simple wallpaper changer
+# Copyright (C) 2023  JakobPer
+# 
+# Full notice in Readme.md
+
 from PyQt6.QtWidgets import QDialog
 
 from presentation.ui import webDialog

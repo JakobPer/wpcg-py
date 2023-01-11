@@ -1,3 +1,8 @@
+# wpcg-py, a simple wallpaper changer
+# Copyright (C) 2023  JakobPer
+# 
+# Full notice in Readme.md
+
 class WallpaperSourceModel:
     """
     Defines a wallpaper source entry.

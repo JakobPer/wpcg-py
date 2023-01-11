@@ -1,3 +1,8 @@
+# wpcg-py, a simple wallpaper changer
+# Copyright (C) 2023  JakobPer
+# 
+# Full notice in Readme.md
+
 import logging
 import os
 import sys

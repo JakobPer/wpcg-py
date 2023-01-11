@@ -1,3 +1,8 @@
+# wpcg-py, a simple wallpaper changer
+# Copyright (C) 2023  JakobPer
+# 
+# Full notice in Readme.md
+
 # import these three numpy packages as pyinstaller fails if not
 import imageio as iio
 import numpy as np
