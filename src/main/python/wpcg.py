@@ -29,9 +29,6 @@ class AppContext:  # 1. Subclass ApplicationContext
         QtCore.QDir.addSearchPath('icons', 'icons')
         app = QApplication(sys.argv)
         icon = QIcon('icons/icon.ico')
-        if len(icon.availableSizes()) == 0:
-            print("Could not find icon")
-            exit(-1)
         icon_loading = QIcon('icons/icon_loading.ico')
         self.w = main_controller.MainController(app, icon, icon_loading)
         return app.exec() # 3. End run() with this line
