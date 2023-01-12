@@ -33,9 +33,6 @@ class AppContext:  # 1. Subclass ApplicationContext
             print("Could not find icon")
             exit(-1)
         icon_loading = QIcon('icons/icon_loading.ico')
-        if len(icon_loading.availableSizes()) == 0:
-            print("Could not find loading icon")
-            exit(-1)
         self.w = main_controller.MainController(app, icon, icon_loading)
         return app.exec() # 3. End run() with this line
 

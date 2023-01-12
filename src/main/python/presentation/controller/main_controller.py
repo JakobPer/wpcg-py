@@ -156,7 +156,7 @@ class MainController:
             self.config.set(ConfigDAO.KEY_BLEND_RATIO, 0.02)
 
     def trayEvent(self, ev: QEvent):
-        if ev.type() == QEvent.Wheel:
+        if ev.type() == QEvent.Type.Wheel:
             self.context_next()
             return True
 
