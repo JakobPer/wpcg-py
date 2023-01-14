@@ -147,7 +147,8 @@ class WallpaperChangingManager:
         filepath = os.path.abspath(image_file_with_path)
 
         # works on Gnome3
-        call(['/usr/bin/gsettings', 'set', 'org.cinnamon.desktop.background', 'picture-uri', 'file://%s' % filepath])
+        call(['/usr/bin/gsettings', 'set', 'org.gnome.desktop.background', 'picture-uri', 'file://%s' % filepath])
+        call(['/usr/bin/gsettings', 'set', 'org.gnome.desktop.background', 'picture-uri-dark', 'file://%s' % filepath])
 
         return True
 
