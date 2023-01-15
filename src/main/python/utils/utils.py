@@ -5,15 +5,12 @@
 
 from pathlib import Path
 
-from PyQt6.QtCore import QThread
-
-
 def get_app_dir():
     """
     :return: The absolute path to the app directory as a string.
     """
     userdir = Path.home()
-    app_dir = userdir.joinpath("wpcg")
+    app_dir = userdir.joinpath(".wpcg")
     if not app_dir.exists():
         app_dir.mkdir()
 

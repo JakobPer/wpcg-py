@@ -135,7 +135,7 @@ class MainController:
 
     def set_default_config(self):
         if not self.config.contains_key(ConfigDAO.KEY_INTERVAL):
-            self.config.set(ConfigDAO.KEY_INTERVAL, 60000)
+            self.config.set(ConfigDAO.KEY_INTERVAL, 3600000)
         if not self.config.contains_key(ConfigDAO.KEY_PRETTIFICATION_THRESHOLD):
             self.config.set(ConfigDAO.KEY_PRETTIFICATION_THRESHOLD, 0.1)
         if not self.config.contains_key(ConfigDAO.KEY_PRETTIFICATION_ENABLED):
