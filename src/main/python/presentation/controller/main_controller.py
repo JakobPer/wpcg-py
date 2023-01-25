@@ -166,11 +166,9 @@ class MainController:
         return self.next_thread.isRunning() or self.previous_thread.isRunning() or self.reload_thread.isRunning()
 
     def start_loading(self):
-        self.app.setOverrideCursor(Qt.CursorShape.WaitCursor)
         self.trayicon.setIcon(self.loading_icon)
 
     def stop_loading(self):
-        self.app.restoreOverrideCursor()
         self.trayicon.setIcon(self.icon)
 
     def context_next(self):
@@ -230,7 +228,6 @@ class MainController:
     def settings_saved(self):
         """called after the settings are saved. Reloads the wallpapers and restarts the timer."""
         logging.debug("Settings saved")
-        self.app.setOverrideCursor(Qt.CursorShape.WaitCursor)
         self.next_action.setEnabled(False)
         self.prev_action.setEnabled(False)
         self.settings_action.setEnabled(False)
