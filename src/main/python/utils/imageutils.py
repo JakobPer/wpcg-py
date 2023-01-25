@@ -169,5 +169,5 @@ class ImageUtils:
         if ImageUtils.is_thread_interrupted(thread): return False
 
         # write image
-        iio.imwrite(dest, np.uint8(final))
+        iio.imwrite(dest, final)
         return True
