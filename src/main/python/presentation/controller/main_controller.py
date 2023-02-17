@@ -228,9 +228,6 @@ class MainController:
     def settings_saved(self):
         """called after the settings are saved. Reloads the wallpapers and restarts the timer."""
         logging.debug("Settings saved")
-        self.next_action.setEnabled(False)
-        self.prev_action.setEnabled(False)
-        self.settings_action.setEnabled(False)
         self.reload_thread.start()
         self.interval = int(self.config.get(ConfigDAO.KEY_INTERVAL))
         self.timer.stop()
