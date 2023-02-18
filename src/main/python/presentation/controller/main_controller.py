@@ -212,7 +212,7 @@ class MainController:
 
     def activated(self, reason):
         """called when the icon is double clicked to change to next wallpaper."""
-        if reason == QSystemTrayIcon.ActivationReason.DoubleClick:
+        if reason == QSystemTrayIcon.ActivationReason.Trigger:
             self.context_next()
 
     def close(self):
