@@ -26,10 +26,11 @@ class AppContext:  # 1. Subclass ApplicationContext
     w = None
 
     def run(self):  # 2. Implement run()
-        QtCore.QDir.addSearchPath('icons', 'icons')
+        cwd = os.path.join(os.getcwd(), os.path.dirname(sys.argv[0]))
+        QtCore.QDir.addSearchPath('icons', os.path.join(cwd, 'icons'))
         app = QApplication(sys.argv)
-        icon = QIcon('icons/icon.ico')
-        icon_loading = QIcon('icons/icon_loading.ico')
+        icon = QIcon(os.path.join(cwd, 'icons/icon.ico'))
+        icon_loading = QIcon(os.path.join(cwd,'icons/icon_loading.ico'))
         self.w = main_controller.MainController(app, icon, icon_loading)
         return app.exec() # 3. End run() with this line
 
