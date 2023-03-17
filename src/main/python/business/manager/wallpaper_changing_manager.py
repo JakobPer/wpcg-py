@@ -56,7 +56,7 @@ class WallpaperChangingManager:
             for prov in self.providers:
                 prov.reload()
 
-    def next_wallpaper(self):
+    def next_wallpaper(self, thread: QtCore.QThread):
         """
         Switches to the next wallpaper in the list of loaded wallpapers and removes it from the list. if the list is
         empty, set previouly shown wallpapers to ignore and load the wallpapers again.
@@ -73,12 +73,12 @@ class WallpaperChangingManager:
                 return
 
             self.prev_counter = 1
-            self._set_wallpaper(wallpaper)
+            self._set_wallpaper(wallpaper, thread)
             self.wpstore.add_history_entry(wallpaper, self.providers[rand].source.sid)
 
             logging.debug("set wallpaper to: %s" % wallpaper)
 
-    def previous_wallpaper(self):
+    def previous_wallpaper(self, thread: QtCore.QThread):
         """
         Set the wallpaper to the previously shown one.
         """
@@ -95,10 +95,10 @@ class WallpaperChangingManager:
             if not os.path.isfile(target):
                 self.previous_wallpaper()
 
-            self._set_wallpaper(target)
+            self._set_wallpaper(target, thread)
             logging.debug("set to previous wallpaper to: %s", target)
 
-    def _set_wallpaper(self, image: string):
+    def _set_wallpaper(self, image: string, thread: QtCore.QThread):
         """
         Sets the wallpaper to the given image. Sets it depending on the platform it is running on.
 
@@ -108,6 +108,11 @@ class WallpaperChangingManager:
         prettification_enabled = self.config.get(ConfigDAO.KEY_PRETTIFICATION_ENABLED) == "True"
 
         im = image
+        # already set image before it was prettified as preview
+        self._set_wallpaper_platform(im)
+
+        if thread.isInterruptionRequested(): return
+
         if prettification_enabled:
             threshold = float(self.config.get(ConfigDAO.KEY_PRETTIFICATION_THRESHOLD))
             repeat_background_enabled = self.config.get(ConfigDAO.KEY_REPEAT_BACKGROUND_ENABLED) == "True"
@@ -122,7 +127,7 @@ class WallpaperChangingManager:
                 if ImageUtils.make_pretty(image, target, repeat_background=repeat_background_enabled,
                                           blend_edges=blend_edges_enabled, blur_background=blur_background_enabled,
                                           width=wallpaper_width, height=wallpaper_height, sigma=blur_amount,
-                                          blend_ratio=blend_ratio, thresh=threshold):
+                                          blend_ratio=blend_ratio, thresh=threshold, thread=thread):
                     logging.debug("wallpaper prettified")
                     im = target
                 else:
@@ -130,10 +135,19 @@ class WallpaperChangingManager:
             except Exception as e:
                 logging.error("Could not prettyfy wallpaper!", exc_info=True)
 
+        self._set_wallpaper_platform(im)
+
+
+    def _set_wallpaper_platform(self, image: string):
+        """
+        Sets the wallpaper for the correct target platform
+
+        :param image: path to the image
+        """
         if platform.system() == "Linux":
-            self._set_wallpaper_gnome(im)
+            self._set_wallpaper_gnome(image)
         elif platform.system() == "Windows":
-            self._set_wallpaper_windows(im)
+            self._set_wallpaper_windows(image)
         else:
             logging.error("Could not detect OS type!")
             logging.error("Only supporting Linux(Gnome3) and Windows. Detected: %s" % platform.system())
@@ -147,7 +161,8 @@ class WallpaperChangingManager:
         filepath = os.path.abspath(image_file_with_path)
 
         # works on Gnome3
-        call(['/usr/bin/gsettings', 'set', 'org.cinnamon.desktop.background', 'picture-uri', 'file://%s' % filepath])
+        call(['/usr/bin/gsettings', 'set', 'org.gnome.desktop.background', 'picture-uri', 'file://%s' % filepath])
+        call(['/usr/bin/gsettings', 'set', 'org.gnome.desktop.background', 'picture-uri-dark', 'file://%s' % filepath])
 
         return True
 

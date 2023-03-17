@@ -50,7 +50,7 @@ class ConfigDAO:
         connection = sqlite3.connect(self._database_url)
         return connection
 
-    def get(self, key: string, default=None) -> string:
+    def get(self, key: str, default:str="") -> str:
         """
         Retrieves the setting from the database but returns the default if the key could not be found.
 
@@ -69,7 +69,7 @@ class ConfigDAO:
             else:
                 return entry[0]
 
-    def set(self, key: string, value: string):
+    def set(self, key: str, value: str):
         """
         Sets or updates the setting of the key.
 
@@ -83,7 +83,7 @@ class ConfigDAO:
             conn.commit()
             conn.close()
 
-    def contains_key(self, key: string) -> bool:
+    def contains_key(self, key: str) -> bool:
         """
         Checks if the database contains the key.
 

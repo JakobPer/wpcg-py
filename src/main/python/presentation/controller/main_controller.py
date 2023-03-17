@@ -30,7 +30,7 @@ class MainController:
 
         def run(self):
             if self.changer is not None:
-                self.changer.next_wallpaper()
+                self.changer.next_wallpaper(self)
 
     class PreviousWallpaperThread(QThread):
 
@@ -43,7 +43,7 @@ class MainController:
 
         def run(self):
             if self.changer is not None:
-                self.changer.previous_wallpaper()
+                self.changer.previous_wallpaper(self)
 
     class ReloadWallpaperThread(QThread):
 
@@ -135,7 +135,7 @@ class MainController:
 
     def set_default_config(self):
         if not self.config.contains_key(ConfigDAO.KEY_INTERVAL):
-            self.config.set(ConfigDAO.KEY_INTERVAL, 60000)
+            self.config.set(ConfigDAO.KEY_INTERVAL, 3600000)
         if not self.config.contains_key(ConfigDAO.KEY_PRETTIFICATION_THRESHOLD):
             self.config.set(ConfigDAO.KEY_PRETTIFICATION_THRESHOLD, 0.1)
         if not self.config.contains_key(ConfigDAO.KEY_PRETTIFICATION_ENABLED):
@@ -156,7 +156,7 @@ class MainController:
             self.config.set(ConfigDAO.KEY_BLEND_RATIO, 0.02)
 
     def trayEvent(self, ev: QEvent):
-        if ev.type() == QEvent.Wheel:
+        if ev.type() == QEvent.Type.Wheel:
             self.context_next()
             return True
 
@@ -166,22 +166,23 @@ class MainController:
         return self.next_thread.isRunning() or self.previous_thread.isRunning() or self.reload_thread.isRunning()
 
     def start_loading(self):
-        self.app.setOverrideCursor(Qt.CursorShape.WaitCursor)
         self.trayicon.setIcon(self.loading_icon)
 
     def stop_loading(self):
-        self.app.restoreOverrideCursor()
         self.trayicon.setIcon(self.icon)
 
     def context_next(self):
         """shows next wallpaper."""
-        if self.action_in_progress():
+        if self.next_thread.isRunning():
+            self.next_thread.requestInterruption()
+            self.next_thread.wait()
+            self.next_thread = MainController.NextWallpaperThread(self.changer)
+            self.next_thread.finished.connect(self.action_completed)
+        elif self.action_in_progress():
             logging.debug("Action in progress, aborting")
             return
 
         self.start_loading()
-        self.next_action.setEnabled(False)
-        self.prev_action.setEnabled(False)
         self.settings_action.setEnabled(False)
         self.next_thread.start()
         self.timer.stop()
@@ -189,27 +190,29 @@ class MainController:
 
     def context_previous(self):
         """shows the previous wallpaper."""
-        if self.action_in_progress():
+        if self.previous_thread.isRunning():
+            self.previous_thread.requestInterruption()
+            self.previous_thread.wait()
+            self.previous_thread = MainController.PreviousWallpaperThread(self.changer)
+            self.previous_thread.finished.connect(self.action_completed)
+        elif self.action_in_progress():
             logging.debug("Action in progress, aborting")
             return
 
         self.start_loading()
-        self.next_action.setEnabled(False)
-        self.prev_action.setEnabled(False)
         self.settings_action.setEnabled(False)
         self.previous_thread.start()
         self.timer.stop()
         self.timer.start(self.interval)
 
     def action_completed(self):
-        self.next_action.setEnabled(True)
-        self.prev_action.setEnabled(True)
         self.settings_action.setEnabled(True)
-        self.stop_loading()
+        if not self.action_in_progress():
+            self.stop_loading()
 
     def activated(self, reason):
         """called when the icon is double clicked to change to next wallpaper."""
-        if reason == QSystemTrayIcon.ActivationReason.DoubleClick:
+        if reason == QSystemTrayIcon.ActivationReason.Trigger:
             self.context_next()
 
     def close(self):
@@ -225,10 +228,6 @@ class MainController:
     def settings_saved(self):
         """called after the settings are saved. Reloads the wallpapers and restarts the timer."""
         logging.debug("Settings saved")
-        self.app.setOverrideCursor(Qt.CursorShape.WaitCursor)
-        self.next_action.setEnabled(False)
-        self.prev_action.setEnabled(False)
-        self.settings_action.setEnabled(False)
         self.reload_thread.start()
         self.interval = int(self.config.get(ConfigDAO.KEY_INTERVAL))
         self.timer.stop()
