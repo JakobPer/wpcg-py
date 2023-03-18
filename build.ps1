@@ -1,1 +1,1 @@
-pyinstaller -y --noconsole -i .\src\main\python\icons\Icon.ico --add-data "src\main\python\icons;icons" .\src\main\python\wpcg.py
+pyinstaller -y --noconsole -i .\wpcg\icons\Icon.ico --add-data "wpcg\icons;icons" .\wpcg\wpcg.py
