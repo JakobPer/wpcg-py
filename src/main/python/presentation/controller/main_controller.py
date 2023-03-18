@@ -5,9 +5,9 @@
 
 import logging
 
-from PyQt6.QtCore import QThread, QTimer, QEvent, Qt
-from PyQt6.QtGui import QIcon, QAction, QPixmap
-from PyQt6.QtWidgets import QSystemTrayIcon, QMenu, QApplication
+from PySide6.QtCore import QThread, QTimer, QEvent, Qt
+from PySide6.QtGui import QIcon, QAction, QPixmap
+from PySide6.QtWidgets import QSystemTrayIcon, QMenu, QApplication
 
 from business.manager.wallpaper_changing_manager import WallpaperChangingManager
 from data.dao.config_dao import ConfigDAO

@@ -7,15 +7,13 @@ import logging
 import os
 import sys
 
-from PyQt6.QtWidgets import QApplication
-import PyQt6.QtWidgets as QtWidgets
-from PyQt6.QtGui import QIcon
-import PyQt6.QtCore as QtCore
+from PySide6.QtWidgets import QApplication
+import PySide6.QtWidgets as QtWidgets
+from PySide6.QtGui import QIcon
+import PySide6.QtCore as QtCore
 
 from presentation.controller import main_controller
 from utils import utils
-
-import icons.rc_icon_resources
 
 
 class AppContext:  # 1. Subclass ApplicationContext

@@ -9,7 +9,7 @@ import string
 
 import utils.utils as utils
 
-from PyQt6 import QtCore
+from PySide6 import QtCore
 
 _mutex = QtCore.QMutex()
 

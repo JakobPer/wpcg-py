@@ -5,17 +5,17 @@
 
 import logging
 
-from PyQt6.QtCore import QTime, Qt
-from PyQt6.QtWidgets import QMainWindow, QListWidgetItem, QFileDialog, QDialog, QMessageBox
+from PySide6.QtCore import QTime, Qt
+from PySide6.QtWidgets import QMainWindow, QListWidgetItem, QFileDialog, QDialog, QMessageBox
 
 from data.dao.config_dao import ConfigDAO
 from data.dao.wallpaper_dao import WallpaperDAO
 from data.model.wallpaper_source_model import WallpaperSourceModel
 from presentation.controller.web_dialog_controller import WebDialogController
-from presentation.ui import settings
+from presentation.ui.ui_settings import Ui_SettingsWindow
 
 
-class SettingsWindowController(QMainWindow, settings.Ui_SettingsWindow):
+class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
     """
     The Settings window using the gui from the ui file.
     """

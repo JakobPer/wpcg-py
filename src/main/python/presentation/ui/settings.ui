@@ -7,14 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>752</width>
-    <height>485</height>
+    <height>526</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Settings</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../icons/icon_resources.qrc">
+   <iconset>
     <normaloff>:/icons/Icon.ico</normaloff>:/icons/Icon.ico</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -67,8 +67,8 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="../../icons/icon_resources.qrc">
-                <normaloff>:/icons/ic_fluent_add_24_filled.svg</normaloff>:/icons/ic_fluent_add_24_filled.svg</iconset>
+               <iconset>
+                <normaloff>:/icons/icons/ic_fluent_add_24_filled.svg</normaloff>:/icons/icons/ic_fluent_add_24_filled.svg</iconset>
               </property>
              </widget>
             </item>
@@ -90,8 +90,8 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="../../icons/icon_resources.qrc">
-                <normaloff>:/icons/ic_fluent_delete_24_filled.svg</normaloff>:/icons/ic_fluent_delete_24_filled.svg</iconset>
+               <iconset>
+                <normaloff>:/icons/icons/ic_fluent_delete_24_filled.svg</normaloff>:/icons/icons/ic_fluent_delete_24_filled.svg</iconset>
               </property>
              </widget>
             </item>
@@ -113,8 +113,8 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="../../icons/icon_resources.qrc">
-                <normaloff>:/icons/ic_fluent_edit_24_filled.svg</normaloff>:/icons/ic_fluent_edit_24_filled.svg</iconset>
+               <iconset>
+                <normaloff>:/icons/icons/ic_fluent_edit_24_filled.svg</normaloff>:/icons/icons/ic_fluent_edit_24_filled.svg</iconset>
               </property>
              </widget>
             </item>
@@ -130,8 +130,8 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="../../icons/icon_resources.qrc">
-                <normaloff>:/icons/ic_fluent_link_24_filled.svg</normaloff>:/icons/ic_fluent_link_24_filled.svg</iconset>
+               <iconset>
+                <normaloff>:/icons/icons/ic_fluent_link_24_filled.svg</normaloff>:/icons/icons/ic_fluent_link_24_filled.svg</iconset>
               </property>
              </widget>
             </item>
@@ -568,8 +568,6 @@
    </layout>
   </widget>
  </widget>
- <resources>
-  <include location="../../icons/icon_resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

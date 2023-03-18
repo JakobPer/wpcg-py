@@ -8,7 +8,7 @@ import imageio as iio
 import numpy as np
 from scipy.ndimage import gaussian_filter
 from PIL import Image
-from PyQt6.QtCore import QThread
+from PySide6.QtCore import QThread
 
 
 class ImageUtils:

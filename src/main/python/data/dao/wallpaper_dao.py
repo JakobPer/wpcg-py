@@ -9,7 +9,7 @@ from os import path
 
 import utils.utils as utils
 from data.model.wallpaper_source_model import WallpaperSourceModel
-from PyQt6 import QtCore
+from PySide6 import QtCore
 
 _mutex = QtCore.QMutex()
 

@@ -20,13 +20,12 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QDoubleSpinBox, QGridLay
     QListWidget, QListWidgetItem, QMainWindow, QPushButton,
     QSizePolicy, QSpacerItem, QSpinBox, QTabWidget,
     QTimeEdit, QVBoxLayout, QWidget)
-import icon_resources_rc
 
 class Ui_SettingsWindow(object):
     def setupUi(self, SettingsWindow):
         if not SettingsWindow.objectName():
             SettingsWindow.setObjectName(u"SettingsWindow")
-        SettingsWindow.resize(752, 485)
+        SettingsWindow.resize(752, 526)
         icon = QIcon()
         icon.addFile(u":/icons/Icon.ico", QSize(), QIcon.Normal, QIcon.Off)
         SettingsWindow.setWindowIcon(icon)
@@ -64,7 +63,7 @@ class Ui_SettingsWindow(object):
         self.btnAddSource.setMaximumSize(QSize(50, 16777215))
         self.btnAddSource.setBaseSize(QSize(0, 0))
         icon1 = QIcon()
-        icon1.addFile(u":/icons/ic_fluent_add_24_filled.svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon1.addFile(u":/icons/icons/ic_fluent_add_24_filled.svg", QSize(), QIcon.Normal, QIcon.Off)
         self.btnAddSource.setIcon(icon1)
 
         self.verticalLayout_2.addWidget(self.btnAddSource)
@@ -74,7 +73,7 @@ class Ui_SettingsWindow(object):
         self.btnRemoveSource.setMaximumSize(QSize(50, 16777215))
         self.btnRemoveSource.setBaseSize(QSize(0, 0))
         icon2 = QIcon()
-        icon2.addFile(u":/icons/ic_fluent_delete_24_filled.svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon2.addFile(u":/icons/icons/ic_fluent_delete_24_filled.svg", QSize(), QIcon.Normal, QIcon.Off)
         self.btnRemoveSource.setIcon(icon2)
 
         self.verticalLayout_2.addWidget(self.btnRemoveSource)
@@ -84,7 +83,7 @@ class Ui_SettingsWindow(object):
         self.btEditSource.setMaximumSize(QSize(50, 16777215))
         self.btEditSource.setBaseSize(QSize(0, 0))
         icon3 = QIcon()
-        icon3.addFile(u":/icons/ic_fluent_edit_24_filled.svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon3.addFile(u":/icons/icons/ic_fluent_edit_24_filled.svg", QSize(), QIcon.Normal, QIcon.Off)
         self.btEditSource.setIcon(icon3)
 
         self.verticalLayout_2.addWidget(self.btEditSource)
@@ -93,7 +92,7 @@ class Ui_SettingsWindow(object):
         self.btnWeb.setObjectName(u"btnWeb")
         self.btnWeb.setMaximumSize(QSize(50, 16777215))
         icon4 = QIcon()
-        icon4.addFile(u":/icons/ic_fluent_link_24_filled.svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon4.addFile(u":/icons/icons/ic_fluent_link_24_filled.svg", QSize(), QIcon.Normal, QIcon.Off)
         self.btnWeb.setIcon(icon4)
 
         self.verticalLayout_2.addWidget(self.btnWeb)

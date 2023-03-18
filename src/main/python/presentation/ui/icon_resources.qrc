@@ -1,0 +1,13 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>../../../icons/ic_fluent_arrow_left_24_filled.svg</file>
+    <file>../../../icons/ic_fluent_arrow_right_24_filled.svg</file>
+    <file>../../../icons/ic_fluent_settings_24_filled.svg</file>
+    <file>../../../icons/ic_fluent_add_24_filled.svg</file>
+    <file>../../../icons/ic_fluent_delete_24_filled.svg</file>
+    <file>../../../icons/ic_fluent_edit_24_filled.svg</file>
+    <file>../../../icons/ic_fluent_link_24_filled.svg</file>
+    <file>../../../icons/Icon.ico</file>
+    <file>../../../icons/icon_loading.ico</file>
+  </qresource>
+</RCC>

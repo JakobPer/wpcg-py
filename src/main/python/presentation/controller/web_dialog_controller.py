@@ -3,12 +3,12 @@
 # 
 # Full notice in Readme.md
 
-from PyQt6.QtWidgets import QDialog
+from PySide6.QtWidgets import QDialog
 
-from presentation.ui import webDialog
+from presentation.ui import ui_webDialog
 
 
-class WebDialogController(QDialog, webDialog.Ui_Dialog):
+class WebDialogController(QDialog, ui_webDialog.Ui_Dialog):
     """
     Implementation for the Web select Dialog.
     """
