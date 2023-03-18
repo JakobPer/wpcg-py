@@ -13,6 +13,7 @@ from business.manager.wallpaper_changing_manager import WallpaperChangingManager
 from data.dao.config_dao import ConfigDAO
 from presentation.controller.settings_window_controller import SettingsWindowController
 
+from presentation.ui import icon_resources_rc
 
 class MainController:
     """
@@ -100,17 +101,17 @@ class MainController:
 
         # context menu actions of the icon
         settingsIcon = QIcon()
-        settingsIcon.addPixmap(QPixmap(':icons/ic_fluent_settings_24_filled.svg'), QIcon.Mode.Normal, QIcon.State.Off)
+        settingsIcon.addPixmap(QPixmap(':icons/icons/ic_fluent_settings_24_filled.svg'), QIcon.Mode.Normal, QIcon.State.Off)
         self.settings_action = QAction(settingsIcon, "Settings")
         self.settings_action.triggered.connect(self.show_settings)
 
         nextIcon = QIcon()
-        nextIcon.addPixmap(QPixmap(':icons/ic_fluent_arrow_right_24_filled.svg'), QIcon.Mode.Normal, QIcon.State.Off)
+        nextIcon.addPixmap(QPixmap(':icons/icons/ic_fluent_arrow_right_24_filled.svg'), QIcon.Mode.Normal, QIcon.State.Off)
         self.next_action = QAction(nextIcon, "Next wallpaper")
         self.next_action.triggered.connect(self.context_next)
 
         prevIcon = QIcon()
-        prevIcon.addPixmap(QPixmap(':icons/ic_fluent_arrow_left_24_filled.svg'), QIcon.Mode.Normal, QIcon.State.Off)
+        prevIcon.addPixmap(QPixmap(':icons/icons/ic_fluent_arrow_left_24_filled.svg'), QIcon.Mode.Normal, QIcon.State.Off)
         self.prev_action = QAction(prevIcon, "Previous wallpaper")
         self.prev_action.triggered.connect(self.context_previous)
 

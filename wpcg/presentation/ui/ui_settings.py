@@ -20,6 +20,7 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QDoubleSpinBox, QGridLay
     QListWidget, QListWidgetItem, QMainWindow, QPushButton,
     QSizePolicy, QSpacerItem, QSpinBox, QTabWidget,
     QTimeEdit, QVBoxLayout, QWidget)
+from  . import icon_resources_rc
 
 class Ui_SettingsWindow(object):
     def setupUi(self, SettingsWindow):
