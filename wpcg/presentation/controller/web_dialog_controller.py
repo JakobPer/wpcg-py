@@ -17,5 +17,5 @@ class WebDialogController(QDialog, ui_webDialog.Ui_Dialog):
         """
         Initializes the dialog.
         """
-        super(QDialog, self).__init__()
+        super().__init__()
         self.setupUi(self)
