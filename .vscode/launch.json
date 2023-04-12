@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "wpcg.py",
             "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}/src/main/python",
+            "cwd": "${workspaceFolder}/wpcg",
             "justMyCode": true
         },
         {
