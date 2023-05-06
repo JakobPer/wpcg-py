@@ -28,3 +28,15 @@ def get_download_dir():
 
     return str(download_dir)
 
+def get_prettified_dir():
+    """
+    :return: The absolute path to the app download directory.
+    """
+    download_dir = Path(get_download_dir())
+    prettified_dir = download_dir.joinpath('prettified')
+    if not prettified_dir.exists():
+        prettified_dir.mkdir()
+
+    return str(prettified_dir)
+
+
