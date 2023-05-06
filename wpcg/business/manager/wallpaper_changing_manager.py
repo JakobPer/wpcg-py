@@ -111,7 +111,7 @@ class WallpaperChangingManager:
 
         im = image
         # already set image before it was prettified as preview
-        self._set_wallpaper_platform(im)
+        # self._set_wallpaper_platform(im)
 
         if thread.isInterruptionRequested(): return
 
