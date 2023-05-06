@@ -123,7 +123,7 @@ class WallpaperChangingManager:
             blur_amount = float(self.config.get(ConfigDAO.KEY_BLUR_AMOUNT))
             blend_ratio = float(self.config.get(ConfigDAO.KEY_BLEND_RATIO))
             try:
-                target = os.path.join(self.download_dir, '___pretty_wallpaper___.png')
+                target = os.path.join(self.download_dir, '___pretty_wallpaper___.jpg')
                 if ImageUtils.make_pretty(image, target, repeat_background=repeat_background_enabled,
                                           blend_edges=blend_edges_enabled, blur_background=blur_background_enabled,
                                           width=wallpaper_width, height=wallpaper_height, sigma=blur_amount,

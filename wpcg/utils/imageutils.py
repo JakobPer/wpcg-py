@@ -4,7 +4,6 @@
 # Full notice in Readme.md
 
 # import these three numpy packages as pyinstaller fails if not
-import imageio as iio
 import numpy as np
 from scipy.ndimage import gaussian_filter
 from PIL import Image
@@ -169,5 +168,7 @@ class ImageUtils:
         if ImageUtils.is_thread_interrupted(thread): return False
 
         # write image
-        iio.imwrite(dest, final)
+        out_image = Image.fromarray(final.astype('uint8'),'RGB')
+        out_image.save(dest, 'jpeg', quality=95)
+
         return True
