@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-./build-ui.sh
+#./build-ui.sh
 
-pyinstaller -y --noconsole -i ./src/main/python/icons/Icon.ico --add-data "src/main/python/icons:icons" ./src/main/python/wpcg.py
+pyinstaller --clean -y --noconsole -p wpcg -i ./wpcg/icons/Icon.ico --add-data "wpcg/icons:icons" ./wpcg/wpcg.py

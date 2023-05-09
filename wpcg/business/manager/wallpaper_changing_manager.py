@@ -12,6 +12,7 @@ import urllib
 from subprocess import call
 from urllib.parse import *
 from data.providers import provider
+from pathlib import Path
 
 import requests
 
@@ -41,6 +42,7 @@ class WallpaperChangingManager:
         self.prev_counter = 1
         self.wpstore = WallpaperDAO()
         self.download_dir = utils.get_download_dir()
+        self.prettified_dir = utils.get_prettified_dir()
         self.providers = []
         self.reload_wallpaper_list()
 
@@ -109,7 +111,7 @@ class WallpaperChangingManager:
 
         im = image
         # already set image before it was prettified as preview
-        self._set_wallpaper_platform(im)
+        # self._set_wallpaper_platform(im)
 
         if thread.isInterruptionRequested(): return
 
@@ -123,7 +125,9 @@ class WallpaperChangingManager:
             blur_amount = float(self.config.get(ConfigDAO.KEY_BLUR_AMOUNT))
             blend_ratio = float(self.config.get(ConfigDAO.KEY_BLEND_RATIO))
             try:
-                target = os.path.join(self.download_dir, '___pretty_wallpaper___.png')
+                imname = Path(im).name
+                imname = os.path.splitext(imname)[0]+'.jpg'
+                target = os.path.join(self.prettified_dir, imname)
                 if ImageUtils.make_pretty(image, target, repeat_background=repeat_background_enabled,
                                           blend_edges=blend_edges_enabled, blur_background=blur_background_enabled,
                                           width=wallpaper_width, height=wallpaper_height, sigma=blur_amount,
