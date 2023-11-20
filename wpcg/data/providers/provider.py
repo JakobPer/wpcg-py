@@ -84,6 +84,74 @@ class FileProvider(Provider):
 
         return target
 
+class ZeroChanProvider(Provider):
+
+    def __init__(self, source: WallpaperSourceModel, wpstore: WallpaperDAO, download_dir: string):
+        super().__init__(source, wpstore, download_dir)
+        self.wplist = []
+
+    def reload(self):
+        self.wplist = []
+
+        split = urlsplit(self.source.url)
+        url = urlunsplit((
+            split[0],
+            split[1],
+            split[2],
+            split[3] if 'json' in split[3] else split[3]+'&json',
+            split[4],
+        ))
+
+        logging.debug("Parsing zerochan url: %s", url)
+        # get zerochan json
+        try:
+            r = requests.get(url, headers={'User-agent': 'wpcg test'})
+            json = r.json()
+            for elem in json['items']:
+                id = elem['id']
+                self.wplist.append(id)
+        except Exception as e:
+            logging.error("Could not get zerochan page %s", url)
+            logging.error(str(e))
+
+        shown = self.wpstore.get_all()
+        for s in shown:
+            if s in self.wplist:
+                self.wplist.remove(s)
+
+    def get_next(self) -> string:
+        if len(self.wplist) == 0:
+            logging.debug("used all wallpapers, reloading")
+            self.wpstore.ignore_all_by_sourceid(self.source.sid)
+            self.reload()
+            if len(self.wplist) == 0:  # we really did not find any
+                logging.warning("no usable wallpapers found")
+                return
+        
+        id = self.wplist.pop()
+        url = "https://zerochan.net/" + str(id) +"?json"
+
+        try:
+            r = requests.get(url, headers={'User-agent': 'wpcg test'} )
+            json = r.json()
+            url = json['full']
+            target = os.path.join(self.download_dir, url.split('/')[-1])
+            if not os.path.exists(target):
+                logging.debug("Downloading: %s", url)
+                urllib.request.urlretrieve(url, target)
+                logging.debug("downloaded to: " + target)
+            else:
+                logging.debug("already downloaded")
+
+        except Exception as e:
+            logging.error("Could not get zerochan page %s", url)
+            logging.error(str(e))
+
+        if not os.path.isfile(target):
+            return None
+
+        return target
+
 
 class RedditProvider(Provider):
 
@@ -165,7 +233,9 @@ def get_providers(sources: List[WallpaperSourceModel], wp_dao: WallpaperDAO, wal
         -> List[Provider]:
     providers = []
     for source in sources:
-        if source.url.startswith("http"):
+        if 'zerochan' in source.url:
+            providers.append(ZeroChanProvider(source, wp_dao, wallpaper_dir))
+        elif 'reddit' in source.url:
             providers.append(RedditProvider(source, wp_dao, wallpaper_dir))
         else:
             providers.append(FileProvider(source, wp_dao, wallpaper_dir))
