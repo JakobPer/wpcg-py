@@ -98,7 +98,7 @@ class ZeroChanProvider(Provider):
             split[0],
             split[1],
             split[2],
-            split[3] if 'json' in split[3] else split[3]+'&json',
+            (split[3] if 'json' in split[3] else split[3]+'&json') + '&l=250',
             split[4],
         ))
 
@@ -118,6 +118,8 @@ class ZeroChanProvider(Provider):
         for s in shown:
             if s in self.wplist:
                 self.wplist.remove(s)
+
+        random.shuffle(self.wplist)
 
     def get_next(self) -> string:
         if len(self.wplist) == 0:

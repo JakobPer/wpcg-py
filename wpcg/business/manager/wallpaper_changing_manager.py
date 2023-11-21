@@ -149,12 +149,20 @@ class WallpaperChangingManager:
         :param image: path to the image
         """
         if platform.system() == "Linux":
-            self._set_wallpaper_gnome(image)
+            #self._set_wallpaper_gnome(image)
+            filepath = os.path.abspath(image)
+            self._set_wallpaper_kde(filepath)
         elif platform.system() == "Windows":
             self._set_wallpaper_windows(image)
         else:
             logging.error("Could not detect OS type!")
             logging.error("Only supporting Linux(Gnome3) and Windows. Detected: %s" % platform.system())
+
+    def _set_wallpaper_kde(self, image):
+
+        call(['plasma-apply-wallpaperimage', image])
+
+        return True
 
     def _set_wallpaper_gnome(self, image_file_with_path):
         """
