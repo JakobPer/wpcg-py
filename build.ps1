@@ -1,1 +1,1 @@
-pyinstaller --clean -y --noconsole -p wpcg -i .\wpcg\icons\Icon.ico --add-data "wpcg\icons;icons" .\wpcg\wpcg.py
+pyinstaller --clean -y --noconsole -p wpcg -i .\wpcg\icons\Icon.ico --add-data "wpcg\icons;icons" --contents-directory "." .\wpcg\wpcg.py
