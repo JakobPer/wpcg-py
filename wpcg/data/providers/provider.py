@@ -137,7 +137,7 @@ class ZeroChanProvider(Provider):
             r = requests.get(url, headers={'User-agent': 'wpcg test'} )
             json = r.json()
             url = json['full']
-            target = os.path.join(self.download_dir, url.split('/')[-1])
+            target = os.path.join(self.download_dir,unquote(url.split('/')[-1]))
             if not os.path.exists(target):
                 logging.debug("Downloading: %s", url)
                 urllib.request.urlretrieve(url, target)
