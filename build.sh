@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
-#./build-ui.sh
-
-pyinstaller --clean --onedir -y --noconsole -p wpcg -i ./wpcg/icons/Icon.ico --add-data "wpcg/icons:icons" --contents-directory "." ./wpcg/wpcg.py
+nuitka3 --standalone \
+ --plugin-enable=pyside6 \
+ --include-data-dir=wpcg/icons=icons \
+ --disable-console \
+ --company-name='github.com/JakobPer' \
+ --product-name='wpcg' \
+ --file-description='wpcg' \
+ --file-version='1.0.0' \
+ --linux-icon=wpcg/icons/icon.ico \
+ ./wpcg/wpcg.py
