@@ -18,6 +18,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QAbstractButton, QApplication, QDialog, QDialogButtonBox,
     QGridLayout, QLabel, QLineEdit, QSizePolicy,
     QVBoxLayout, QWidget)
+from . import icon_resources_rc
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -25,6 +26,9 @@ class Ui_Dialog(object):
             Dialog.setObjectName(u"Dialog")
         Dialog.setWindowModality(Qt.WindowModal)
         Dialog.resize(485, 141)
+        icon = QIcon()
+        icon.addFile(u":/icons/icons/icon.ico", QSize(), QIcon.Normal, QIcon.On)
+        Dialog.setWindowIcon(icon)
         Dialog.setModal(True)
         self.verticalLayout = QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -67,8 +71,8 @@ class Ui_Dialog(object):
     # setupUi
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Add Reddit URL", None))
-        self.label_2.setText(QCoreApplication.translate("Dialog", u"Enter a Reddit URL to use as wallpaper source. (e.g.: https://www.zerochan.net/ )", None))
+        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Add wallpaper source URL", None))
+        self.label_2.setText(QCoreApplication.translate("Dialog", u"Enter a wallpaper source URL to use as wallpaper provider. (e.g.: https://www.zerochan.net/ )", None))
         self.label.setText(QCoreApplication.translate("Dialog", u"URL:", None))
         self.leURL.setText(QCoreApplication.translate("Dialog", u"https://www.zerochan.net/", None))
     # retranslateUi

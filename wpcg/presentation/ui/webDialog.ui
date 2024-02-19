@@ -14,7 +14,12 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Add Reddit URL</string>
+   <string>Add wallpaper source URL</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normalon>:/icons/icons/icon.ico</normalon>
+   </iconset>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -23,7 +28,7 @@
    <item>
     <widget class="QLabel" name="label_2">
      <property name="text">
-      <string>Enter a Reddit URL to use as wallpaper source. (e.g.: https://www.zerochan.net/ )</string>
+      <string>Enter a wallpaper source URL to use as wallpaper provider. (e.g.: https://www.zerochan.net/ )</string>
      </property>
      <property name="textFormat">
       <enum>Qt::AutoText</enum>
@@ -66,7 +71,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="icon_resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>

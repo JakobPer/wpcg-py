@@ -28,7 +28,7 @@ class Ui_SettingsWindow(object):
             SettingsWindow.setObjectName(u"SettingsWindow")
         SettingsWindow.resize(752, 526)
         icon = QIcon()
-        icon.addFile(u":/icons/Icon.ico", QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile(u":/icons/icons/icon.ico", QSize(), QIcon.Normal, QIcon.On)
         SettingsWindow.setWindowIcon(icon)
         self.centralwidget = QWidget(SettingsWindow)
         self.centralwidget.setObjectName(u"centralwidget")
