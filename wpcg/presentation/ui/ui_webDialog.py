@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'webDialog.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.4.1
+## Created by: Qt User Interface Compiler version 6.6.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -68,8 +68,8 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Add Reddit URL", None))
-        self.label_2.setText(QCoreApplication.translate("Dialog", u"Enter a Reddit URL to use as wallpaper source. (e.g.: https://www.reddit.com/r/wallpaper)", None))
+        self.label_2.setText(QCoreApplication.translate("Dialog", u"Enter a Reddit URL to use as wallpaper source. (e.g.: https://www.zerochan.net/ )", None))
         self.label.setText(QCoreApplication.translate("Dialog", u"URL:", None))
-        self.leURL.setText(QCoreApplication.translate("Dialog", u"https://www.reddit.com/r/wallpaper", None))
+        self.leURL.setText(QCoreApplication.translate("Dialog", u"https://www.zerochan.net/", None))
     # retranslateUi
 

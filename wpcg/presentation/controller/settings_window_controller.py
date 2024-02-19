@@ -14,6 +14,13 @@ from data.model.wallpaper_source_model import WallpaperSourceModel
 from presentation.controller.web_dialog_controller import WebDialogController
 from presentation.ui.ui_settings import Ui_SettingsWindow
 
+import platform
+import os
+import sys
+
+if platform.system() == "Windows":
+    import winreg
+
 
 class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
     """
@@ -68,7 +75,6 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
 
         # bottom
         self.btnOk.pressed.connect(self.ok_pressed)
-        self.btnCancel.pressed.connect(self.cancel_pressed)
 
         # set config properties
         self.prettification_enabled = False
@@ -85,6 +91,10 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         self.cb_repeat_backround.stateChanged.connect(self.cb_repeat_backround_clicked)
         self.cb_blur_background.stateChanged.connect(self.cb_blur_background_clicked)
         self.cb_blend_edges.stateChanged.connect(self.cb_blend_edges_clicked)
+
+        # windows tab
+        self.tab_windows.setEnabled(platform.system() == "Windows")
+        self.cb_autostart.stateChanged.connect(self.cb_autostart_windows_changed)
 
         self.reload_config()
 
@@ -139,9 +149,6 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         self.hide()
         self.saved_callback()
 
-    def cancel_pressed(self):
-        """Called on cancel. Hides the window."""
-        self.hide()
 
     def remove_pressed(self):
         """Called when the remove button is pressed. Removes the item from the list and from the WPStore."""
@@ -254,6 +261,8 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         self.dsb_amount.setValue(self.blur_amount)
         self.dsb_blend_ratio.setValue(self.blend_ratio)
 
+        self.cb_autostart.setChecked(self.is_windows_autostart_enabled())
+
         self.reset_visibilities()
 
     def reset_visibilities(self):
@@ -280,3 +289,28 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
     def cb_blend_edges_clicked(self):
         self.blend_edges_enabled = self.cb_blend_edges.isChecked()
         self.reset_visibilities()
+
+    def cb_autostart_windows_changed(self):
+        try:
+            if platform.system() == "Windows":
+                runKey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r'SOFTWARE\Microsoft\Windows\CurrentVersion\Run', 1, winreg.KEY_WRITE)
+
+                wpcg_path = os.path.join(os.getcwd(), sys.argv[0])
+                if self.cb_autostart.isChecked():
+                    winreg.SetValueEx(runKey, r"wpcg", 1, winreg.REG_SZ, wpcg_path)
+                else:
+                    winreg.DeleteValue(runKey, r"wpcg")
+        except:
+            self.cb_autostart.setChecked(False)
+
+    def is_windows_autostart_enabled(self):
+        try:
+            if platform.system() == "Windows":
+                runKey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r'SOFTWARE\Microsoft\Windows\CurrentVersion\Run', 1, winreg.KEY_READ)
+                # throws an exception if not found
+                (value, _) = winreg.QueryValueEx(runKey, r'wpcg')
+                return value is not None
+        except:
+            return False
+        return False
+

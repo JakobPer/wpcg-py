@@ -23,7 +23,7 @@
    <item>
     <widget class="QLabel" name="label_2">
      <property name="text">
-      <string>Enter a Reddit URL to use as wallpaper source. (e.g.: https://www.reddit.com/r/wallpaper)</string>
+      <string>Enter a Reddit URL to use as wallpaper source. (e.g.: https://www.zerochan.net/ )</string>
      </property>
      <property name="textFormat">
       <enum>Qt::AutoText</enum>
@@ -48,7 +48,7 @@
      <item row="0" column="1">
       <widget class="QLineEdit" name="leURL">
        <property name="text">
-        <string>https://www.reddit.com/r/wallpaper</string>
+        <string>https://www.zerochan.net/</string>
        </property>
       </widget>
      </item>

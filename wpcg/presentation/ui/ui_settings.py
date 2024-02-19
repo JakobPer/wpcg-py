@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'settings.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.4.1
+## Created by: Qt User Interface Compiler version 6.6.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QDoubleSpinBox, QGridLay
     QListWidget, QListWidgetItem, QMainWindow, QPushButton,
     QSizePolicy, QSpacerItem, QSpinBox, QTabWidget,
     QTimeEdit, QVBoxLayout, QWidget)
-from  . import icon_resources_rc
+from . import icon_resources_rc
 
 class Ui_SettingsWindow(object):
     def setupUi(self, SettingsWindow):
@@ -32,7 +32,7 @@ class Ui_SettingsWindow(object):
         SettingsWindow.setWindowIcon(icon)
         self.centralwidget = QWidget(SettingsWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
@@ -98,7 +98,7 @@ class Ui_SettingsWindow(object):
 
         self.verticalLayout_2.addWidget(self.btnWeb)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_2.addItem(self.verticalSpacer)
 
@@ -118,7 +118,7 @@ class Ui_SettingsWindow(object):
 
         self.label_2 = QLabel(self.tab_general)
         self.label_2.setObjectName(u"label_2")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
@@ -126,7 +126,7 @@ class Ui_SettingsWindow(object):
 
         self.gridLayout.addWidget(self.label_2, 0, 1, 1, 1)
 
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.gridLayout.addItem(self.horizontalSpacer_2, 0, 4, 1, 1)
 
@@ -160,7 +160,7 @@ class Ui_SettingsWindow(object):
 
         self.horizontalLayout_4.addWidget(self.dsb_threshold)
 
-        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_4.addItem(self.horizontalSpacer_6)
 
@@ -176,7 +176,7 @@ class Ui_SettingsWindow(object):
 
         self.gridLayout_2.addWidget(self.label_7, 1, 0, 1, 1)
 
-        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.gridLayout_2.addItem(self.horizontalSpacer_4, 0, 2, 1, 1)
 
@@ -187,7 +187,7 @@ class Ui_SettingsWindow(object):
 
         self.sb_width = QSpinBox(self.groupBox_3)
         self.sb_width.setObjectName(u"sb_width")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
         sizePolicy2.setHorizontalStretch(0)
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.sb_width.sizePolicy().hasHeightForWidth())
@@ -242,7 +242,7 @@ class Ui_SettingsWindow(object):
 
         self.horizontalLayout_2.addWidget(self.dsb_amount)
 
-        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer_3)
 
@@ -269,7 +269,7 @@ class Ui_SettingsWindow(object):
 
         self.gridLayout_5.addWidget(self.dsb_blend_ratio, 0, 1, 1, 1)
 
-        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.gridLayout_5.addItem(self.horizontalSpacer_5, 0, 2, 1, 1)
 
@@ -285,33 +285,40 @@ class Ui_SettingsWindow(object):
 
         self.verticalLayout_4.addWidget(self.gb_prettification)
 
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_4.addItem(self.verticalSpacer_2)
 
         self.tabWidget.addTab(self.tab_wallpaper, "")
+        self.tab_windows = QWidget()
+        self.tab_windows.setObjectName(u"tab_windows")
+        self.verticalLayout_8 = QVBoxLayout(self.tab_windows)
+        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        self.cb_autostart = QCheckBox(self.tab_windows)
+        self.cb_autostart.setObjectName(u"cb_autostart")
+
+        self.verticalLayout_8.addWidget(self.cb_autostart)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_8.addItem(self.verticalSpacer_3)
+
+        self.tabWidget.addTab(self.tab_windows, "")
 
         self.gridLayout_3.addWidget(self.tabWidget, 0, 0, 1, 1)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
 
-        self.btnCancel = QPushButton(self.centralwidget)
-        self.btnCancel.setObjectName(u"btnCancel")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.btnCancel.sizePolicy().hasHeightForWidth())
-        self.btnCancel.setSizePolicy(sizePolicy3)
-
-        self.horizontalLayout.addWidget(self.btnCancel)
-
         self.btnOk = QPushButton(self.centralwidget)
         self.btnOk.setObjectName(u"btnOk")
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
         sizePolicy3.setHeightForWidth(self.btnOk.sizePolicy().hasHeightForWidth())
         self.btnOk.setSizePolicy(sizePolicy3)
 
@@ -413,7 +420,8 @@ class Ui_SettingsWindow(object):
 "                                                                                      ", None))
 #endif // QT_CONFIG(tooltip)
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_wallpaper), QCoreApplication.translate("SettingsWindow", u"Wallpaper", None))
-        self.btnCancel.setText(QCoreApplication.translate("SettingsWindow", u"Cancel", None))
+        self.cb_autostart.setText(QCoreApplication.translate("SettingsWindow", u"Autostart", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_windows), QCoreApplication.translate("SettingsWindow", u"Windows", None))
         self.btnOk.setText(QCoreApplication.translate("SettingsWindow", u"Ok", None))
     # retranslateUi
 
