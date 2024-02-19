@@ -93,7 +93,8 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         self.cb_blend_edges.stateChanged.connect(self.cb_blend_edges_clicked)
 
         # windows tab
-        self.tab_windows.setEnabled(platform.system() == "Windows")
+        windows_tab_index = self.tabWidget.indexOf(self.tab_windows)
+        self.tabWidget.setTabVisible(windows_tab_index, platform.system() == "Windows")
         self.cb_autostart.stateChanged.connect(self.cb_autostart_windows_changed)
 
         self.reload_config()
