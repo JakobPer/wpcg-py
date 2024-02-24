@@ -59,7 +59,7 @@ class MainController:
             if self.changer is not None:
                 self.changer.reload_wallpaper_list()
 
-    def __init__(self, app: QApplication, icon: QIcon, loadingIcon: QIcon):
+    def __init__(self, app: QApplication):
         """
         Initializes the Wallpaperchanger. Loads settings and wallpapers. Creates TrayIcon and Settings.
 
@@ -92,10 +92,11 @@ class MainController:
         self.settings_window = SettingsWindowController(self.config, self.changer.wpstore, self.settings_saved)
 
         # create tray icon
-        self.icon = icon
-        self.loading_icon = loadingIcon
+        self.icon = QIcon(u":icons/icons/icon.ico")
+        self.loading_icon = QIcon(u":icons/icons/icon_loading.ico")
+
         self.trayicon = QSystemTrayIcon()
-        self.trayicon.setIcon(icon)
+        self.trayicon.setIcon(self.icon)
         self.trayicon.activated.connect(self.activated)  # icon double click
         self.trayicon.event = self.trayEvent
 

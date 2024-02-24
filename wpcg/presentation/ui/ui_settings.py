@@ -129,7 +129,7 @@ class Ui_SettingsWindow(object):
 
         self.verticalLayout_3.addLayout(self.horizontalLayout_3)
 
-        icon5 = QIcon(QIcon.fromTheme(u"folder-remote-symbolic"))
+        icon5 = QIcon(QIcon.fromTheme(u"server-database"))
         self.tabWidget.addTab(self.tab_sources, icon5, "")
         self.tab_general = QWidget()
         self.tab_general.setObjectName(u"tab_general")

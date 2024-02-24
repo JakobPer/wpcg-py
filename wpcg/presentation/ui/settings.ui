@@ -33,7 +33,7 @@
       </property>
       <widget class="QWidget" name="tab_sources">
        <attribute name="icon">
-        <iconset theme="folder-remote-symbolic"/>
+        <iconset theme="server-database"/>
        </attribute>
        <attribute name="title">
         <string>Sources</string>
