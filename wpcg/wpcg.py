@@ -11,7 +11,8 @@ from PySide6.QtWidgets import QApplication
 import PySide6.QtWidgets as QtWidgets
 from PySide6.QtGui import QIcon
 import PySide6.QtCore as QtCore
-import PySide6
+# import QtSvg cause otherwise Svg resources don't work on Win11 for some reason... 
+from PySide6 import QtSvg, QtXml # DO NOT REMOVE
 
 from presentation.controller import main_controller
 from utils import utils
