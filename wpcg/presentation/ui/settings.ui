@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>752</width>
-    <height>526</height>
+    <height>602</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -68,8 +68,9 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="icon_resources.qrc">
-                <normaloff>:/icons/icons/ic_fluent_add_24_filled.svg</normaloff>:/icons/icons/ic_fluent_add_24_filled.svg</iconset>
+               <iconset theme="folder-new">
+                <normalon>:/icons/icons/ic_fluent_add_24_filled.svg</normalon>
+               </iconset>
               </property>
              </widget>
             </item>
@@ -91,7 +92,7 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="icon_resources.qrc">
+               <iconset theme="delete" resource="icon_resources.qrc">
                 <normaloff>:/icons/icons/ic_fluent_delete_24_filled.svg</normaloff>:/icons/icons/ic_fluent_delete_24_filled.svg</iconset>
               </property>
              </widget>
@@ -114,7 +115,7 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="icon_resources.qrc">
+               <iconset theme="document-edit" resource="icon_resources.qrc">
                 <normaloff>:/icons/icons/ic_fluent_edit_24_filled.svg</normaloff>:/icons/icons/ic_fluent_edit_24_filled.svg</iconset>
               </property>
              </widget>
@@ -131,8 +132,9 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="icon_resources.qrc">
-                <normaloff>:/icons/icons/ic_fluent_link_24_filled.svg</normaloff>:/icons/icons/ic_fluent_link_24_filled.svg</iconset>
+               <iconset theme="link" resource="icon_resources.qrc">
+                <normaloff>:/icons/icons/ic_fluent_link_24_filled.svg</normaloff>
+                <normalon>:/icons/icons/ic_fluent_link_24_filled.svg</normalon>:/icons/icons/ic_fluent_link_24_filled.svg</iconset>
               </property>
              </widget>
             </item>

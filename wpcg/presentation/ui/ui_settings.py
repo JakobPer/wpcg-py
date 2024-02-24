@@ -26,7 +26,7 @@ class Ui_SettingsWindow(object):
     def setupUi(self, SettingsWindow):
         if not SettingsWindow.objectName():
             SettingsWindow.setObjectName(u"SettingsWindow")
-        SettingsWindow.resize(752, 526)
+        SettingsWindow.resize(752, 602)
         icon = QIcon()
         icon.addFile(u":/icons/icons/icon.ico", QSize(), QIcon.Normal, QIcon.On)
         SettingsWindow.setWindowIcon(icon)
@@ -64,7 +64,12 @@ class Ui_SettingsWindow(object):
         self.btnAddSource.setMaximumSize(QSize(50, 16777215))
         self.btnAddSource.setBaseSize(QSize(0, 0))
         icon1 = QIcon()
-        icon1.addFile(u":/icons/icons/ic_fluent_add_24_filled.svg", QSize(), QIcon.Normal, QIcon.Off)
+        iconThemeName = u"folder-new"
+        if QIcon.hasThemeIcon(iconThemeName):
+            icon1 = QIcon.fromTheme(iconThemeName)
+        else:
+            icon1.addFile(u":/icons/icons/ic_fluent_add_24_filled.svg", QSize(), QIcon.Normal, QIcon.On)
+
         self.btnAddSource.setIcon(icon1)
 
         self.verticalLayout_2.addWidget(self.btnAddSource)
@@ -74,7 +79,12 @@ class Ui_SettingsWindow(object):
         self.btnRemoveSource.setMaximumSize(QSize(50, 16777215))
         self.btnRemoveSource.setBaseSize(QSize(0, 0))
         icon2 = QIcon()
-        icon2.addFile(u":/icons/icons/ic_fluent_delete_24_filled.svg", QSize(), QIcon.Normal, QIcon.Off)
+        iconThemeName = u"delete"
+        if QIcon.hasThemeIcon(iconThemeName):
+            icon2 = QIcon.fromTheme(iconThemeName)
+        else:
+            icon2.addFile(u":/icons/icons/ic_fluent_delete_24_filled.svg", QSize(), QIcon.Normal, QIcon.Off)
+
         self.btnRemoveSource.setIcon(icon2)
 
         self.verticalLayout_2.addWidget(self.btnRemoveSource)
@@ -84,7 +94,12 @@ class Ui_SettingsWindow(object):
         self.btEditSource.setMaximumSize(QSize(50, 16777215))
         self.btEditSource.setBaseSize(QSize(0, 0))
         icon3 = QIcon()
-        icon3.addFile(u":/icons/icons/ic_fluent_edit_24_filled.svg", QSize(), QIcon.Normal, QIcon.Off)
+        iconThemeName = u"document-edit"
+        if QIcon.hasThemeIcon(iconThemeName):
+            icon3 = QIcon.fromTheme(iconThemeName)
+        else:
+            icon3.addFile(u":/icons/icons/ic_fluent_edit_24_filled.svg", QSize(), QIcon.Normal, QIcon.Off)
+
         self.btEditSource.setIcon(icon3)
 
         self.verticalLayout_2.addWidget(self.btEditSource)
@@ -93,7 +108,13 @@ class Ui_SettingsWindow(object):
         self.btnWeb.setObjectName(u"btnWeb")
         self.btnWeb.setMaximumSize(QSize(50, 16777215))
         icon4 = QIcon()
-        icon4.addFile(u":/icons/icons/ic_fluent_link_24_filled.svg", QSize(), QIcon.Normal, QIcon.Off)
+        iconThemeName = u"link"
+        if QIcon.hasThemeIcon(iconThemeName):
+            icon4 = QIcon.fromTheme(iconThemeName)
+        else:
+            icon4.addFile(u":/icons/icons/ic_fluent_link_24_filled.svg", QSize(), QIcon.Normal, QIcon.Off)
+            icon4.addFile(u":/icons/icons/ic_fluent_link_24_filled.svg", QSize(), QIcon.Normal, QIcon.On)
+
         self.btnWeb.setIcon(icon4)
 
         self.verticalLayout_2.addWidget(self.btnWeb)
