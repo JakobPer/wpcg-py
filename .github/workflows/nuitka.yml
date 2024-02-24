@@ -44,7 +44,7 @@ jobs:
         enable-plugins: pyside6
         company-name: 'github.com/JakobPer'
         product-name: 'wpcg'
-        product-description: 'wpcg'
+        file-description: 'wpcg'
         file-version: '0.0.1'
         linux-icon: 'wpcg/icons/linux/256.png'
         windows-icon-from-ico: 'wpcg/icons/icon.ico'
