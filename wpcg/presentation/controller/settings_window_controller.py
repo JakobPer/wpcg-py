@@ -96,6 +96,8 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         windows_tab_index = self.tabWidget.indexOf(self.tab_windows)
         self.tabWidget.setTabVisible(windows_tab_index, platform.system() == "Windows")
         self.cb_autostart.stateChanged.connect(self.cb_autostart_windows_changed)
+        # ToDo: re-enable once its working
+        self.cb_autostart.setEnabled(False)
 
         self.reload_config()
 
@@ -292,26 +294,8 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         self.reset_visibilities()
 
     def cb_autostart_windows_changed(self):
-        try:
-            if platform.system() == "Windows":
-                runKey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r'SOFTWARE\Microsoft\Windows\CurrentVersion\Run', 1, winreg.KEY_WRITE)
-
-                wpcg_path = os.path.join(os.getcwd(), sys.argv[0])
-                if self.cb_autostart.isChecked():
-                    winreg.SetValueEx(runKey, r"wpcg", 1, winreg.REG_SZ, wpcg_path)
-                else:
-                    winreg.DeleteValue(runKey, r"wpcg")
-        except:
-            self.cb_autostart.setChecked(False)
+        pass # ToDo: implement without registry
 
     def is_windows_autostart_enabled(self):
-        try:
-            if platform.system() == "Windows":
-                runKey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r'SOFTWARE\Microsoft\Windows\CurrentVersion\Run', 1, winreg.KEY_READ)
-                # throws an exception if not found
-                (value, _) = winreg.QueryValueEx(runKey, r'wpcg')
-                return value is not None
-        except:
-            return False
         return False
 
