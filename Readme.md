@@ -12,12 +12,16 @@ Currently supported operating Systems:
  * Windows 10/11 (others are not tested but might also work)
  * Linux [not tested _yet_] (Cinnamon, Gnome 3)
 
+## [Download](https://github.com/JakobPer/wpcg-py/releases/tag/latest)
+
 ### Settings 
  ![Settings](images/settings.jpg)
 
 ### Prettified wallpaper
 
  ![Prettifies wallpaper](images/pretty.png)
+ 
+ [Source](https://www.pexels.com/de-de/foto/feld-wald-baume-gras-14402634/)
 
 # Building the app
 
