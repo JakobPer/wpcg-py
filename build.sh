@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 nuitka3 --standalone \
+ --onefile \
  --plugin-enable=pyside6 \
  --disable-console \
  --company-name='github.com/JakobPer' \
