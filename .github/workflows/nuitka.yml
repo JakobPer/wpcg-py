@@ -29,10 +29,13 @@ jobs:
         # Version range or exact version of Python or PyPy to use, using SemVer's version range syntax. Reads from .python-version if unset.
         python-version: '3.10'
         # Used to specify a package manager for caching in the default directory. Supported values: pip, pipenv, poetry.
-        cache: 'pipenv'
+        cache: 'pip'
         # Used to specify the path to dependency files. Supports wildcards or a list of file names for caching multiple dependencies.
         cache-dependency-path: |
             requirements.txt
+    - run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
     - name: Build executables from Python projects
       uses: Nuitka/Nuitka-Action@v1.1
@@ -41,6 +44,7 @@ jobs:
         script-name: 'wpcg/wpcg.py'
         standalone: true
         onefile: true
+        disable-console: true
         enable-plugins: pyside6
         company-name: 'github.com/JakobPer'
         product-name: 'wpcg'
