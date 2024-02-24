@@ -5,8 +5,7 @@
 
 # import these three numpy packages as pyinstaller fails if not
 import numpy as np
-from scipy.ndimage import gaussian_filter
-from PIL import Image
+from PIL import Image, ImageFilter
 from PySide6.QtCore import QThread
 
 
@@ -19,7 +18,7 @@ class ImageUtils:
 
     @staticmethod
     def make_pretty(src, dest, repeat_background=False, blur_background=False, sigma=10, blend_edges=False,
-                    blend_ratio=0.02, width=1920, height=1080, thresh=0.1, thread: QThread = None):
+                    blend_ratio=0.02, width=1920, height=1080, thresh=0.1, format='jpg', quality=95):
         """
         Creates a new image from the source image. The new image increases the size of the shorter edge of the source
         image to fit the R ratio provided. Then it calculated the median values of both column edges and then the mean
@@ -50,15 +49,8 @@ class ImageUtils:
         source_image = Image.open(src)
         source_ratio = source_image.width / source_image.height
 
-        if ImageUtils.is_thread_interrupted(thread): return False
-
         # set new size
-        new_size = np.zeros(3, dtype=int)
-        new_size[0] = height
-        new_size[1] = width
-        new_size[2] = 3
-
-        if ImageUtils.is_thread_interrupted(thread): return False
+        new_size = [height, width, 3]
 
         image_ratio = float(width) / float(height)
         narrow = source_ratio < image_ratio
@@ -76,8 +68,6 @@ class ImageUtils:
         source_image = source_image.resize(resize_dimension, resample=Image.BICUBIC)
         image = np.array(source_image)[:, :, 0:3]
 
-        if ImageUtils.is_thread_interrupted(thread): return False
-
         # calc mean of left/right or top/bottom depending on ratio
         means = None
         if narrow:
@@ -86,13 +76,9 @@ class ImageUtils:
             means = np.median(image[(0, image.shape[0] - 1), :], axis=0).astype(int)
         mean_color = np.mean(means, axis=0).astype(int)
 
-        if ImageUtils.is_thread_interrupted(thread): return False
-
         # create final image with mean color
         final = np.zeros(new_size, dtype=int)
         final[:, :] = mean_color
-
-        if ImageUtils.is_thread_interrupted(thread): return False
 
         # calc offset of center image
         offset = int((new_size[1] - image.shape[1]) / 2) if narrow else int((new_size[0] - image.shape[0]) / 2)
@@ -102,7 +88,7 @@ class ImageUtils:
             if narrow:
                 left = -int(image.shape[1] - offset % image.shape[1])
                 repeat = True
-                while repeat and not ImageUtils.is_thread_interrupted(thread):
+                while repeat:
                     if left + image.shape[1] < new_size[1]:
                         right = left + image.shape[1]
                     else:
@@ -117,7 +103,7 @@ class ImageUtils:
             else:
                 top = -int(image.shape[0] - offset % image.shape[0])
                 repeat = True
-                while repeat and not ImageUtils.is_thread_interrupted(thread):
+                while repeat:
                     if top + image.shape[0] < new_size[0]:
                         bottom = top + image.shape[0]
                     else:
@@ -132,19 +118,15 @@ class ImageUtils:
 
         if blur_background:
             # blur the background
-            final[:, :, 0] = gaussian_filter(final[:, :, 0], sigma=sigma)
-            if ImageUtils.is_thread_interrupted(thread): return False
-            final[:, :, 1] = gaussian_filter(final[:, :, 1], sigma=sigma)
-            if ImageUtils.is_thread_interrupted(thread): return False
-            final[:, :, 2] = gaussian_filter(final[:, :, 2], sigma=sigma)
-            if ImageUtils.is_thread_interrupted(thread): return False
+            tmp_img = Image.fromarray(final.astype('uint8'),'RGB')
+            tmp_img = tmp_img.filter(ImageFilter.GaussianBlur(radius=sigma))
+            final = np.array(tmp_img)[:,:,0:3]
 
         blend_radius = 0  # set to zero for final image composition to work if blur is disabled
         if blend_edges:
             # blend edges
             blend_radius = int(new_size[1] * blend_ratio) if narrow else int(new_size * blend_ratio)
             for i in range(0, blend_radius):
-                if ImageUtils.is_thread_interrupted(thread): return False
                 f = i / blend_radius
                 if narrow:
                     final[:, offset + i] = (1 - f) * final[:, offset + i] + f * image[:, i]
@@ -165,10 +147,8 @@ class ImageUtils:
             final[offset + blend_radius:offset + image.shape[0] - blend_radius, :] = \
                 image[blend_radius:image.shape[0] - blend_radius, :]
 
-        if ImageUtils.is_thread_interrupted(thread): return False
-
         # write image
         out_image = Image.fromarray(final.astype('uint8'),'RGB')
-        out_image.save(dest, 'jpeg', quality=95)
+        out_image.save(dest, format=format, quality=quality)
 
         return True
