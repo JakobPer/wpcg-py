@@ -10,7 +10,7 @@ from PySide6.QtGui import QIcon, QAction, QPixmap
 from PySide6.QtWidgets import QSystemTrayIcon, QMenu, QApplication
 
 from business.manager.wallpaper_changing_manager import WallpaperChangingManager
-from data.dao.config_dao import ConfigDAO
+from data.dao.settings_dao import SettingsDAO
 from presentation.controller.settings_window_controller import SettingsWindowController
 
 from presentation.ui import icon_resources_rc
@@ -68,20 +68,17 @@ class MainController:
         """
 
         self.app = app
-        self.config = ConfigDAO()
-
-        # set default config parameters
-        self.set_default_config()
+        self.settings_dao = SettingsDAO()
+        self.settings = self.settings_dao.load()
 
         self.wplist = []
         # timer that changes the wallpaper
         self.timer = QTimer()
-        self.interval = int(self.config.get(ConfigDAO.KEY_INTERVAL))
 
-        logging.debug("using interval of %d ms", self.interval)
+        logging.debug("using interval of %d ms", self.settings.change_interval)
 
         # create the changer
-        self.changer = WallpaperChangingManager(self.config)
+        self.changer = WallpaperChangingManager(self.settings)
         self.next_thread = MainController.NextWallpaperThread(self.changer)
         self.next_thread.finished.connect(self.action_completed)
         self.previous_thread = MainController.PreviousWallpaperThread(self.changer)
@@ -89,7 +86,7 @@ class MainController:
         self.reload_thread = MainController.ReloadWallpaperThread(self.changer)
         self.reload_thread.finished.connect(self.action_completed)
         # init settings window
-        self.settings_window = SettingsWindowController(self.config, self.changer.wpstore, self.settings_saved)
+        self.settings_window = SettingsWindowController(self.settings_dao, self.changer.wpstore, self.settings_saved)
 
         # create tray icon
         self.icon = QIcon(u":icons/icons/icon.ico")
@@ -151,29 +148,7 @@ class MainController:
 
         # start the timer
         self.timer.timeout.connect(self.context_next)
-        self.timer.start(self.interval)
-
-    def set_default_config(self):
-        if not self.config.contains_key(ConfigDAO.KEY_INTERVAL):
-            self.config.set(ConfigDAO.KEY_INTERVAL, 3600000)
-        if not self.config.contains_key(ConfigDAO.KEY_PRETTIFICATION_THRESHOLD):
-            self.config.set(ConfigDAO.KEY_PRETTIFICATION_THRESHOLD, 0.1)
-        if not self.config.contains_key(ConfigDAO.KEY_PRETTIFICATION_ENABLED):
-            self.config.set(ConfigDAO.KEY_PRETTIFICATION_ENABLED, str(True))
-        if not self.config.contains_key(ConfigDAO.KEY_REPEAT_BACKGROUND_ENABLED):
-            self.config.set(ConfigDAO.KEY_REPEAT_BACKGROUND_ENABLED, str(True))
-        if not self.config.contains_key(ConfigDAO.KEY_BLUR_BACKGROUND_ENABLED):
-            self.config.set(ConfigDAO.KEY_BLUR_BACKGROUND_ENABLED, str(True))
-        if not self.config.contains_key(ConfigDAO.KEY_BLEND_EDGES_ENABLED):
-            self.config.set(ConfigDAO.KEY_BLEND_EDGES_ENABLED, str(True))
-        if not self.config.contains_key(ConfigDAO.KEY_WALLPAPER_WIDTH):
-            self.config.set(ConfigDAO.KEY_WALLPAPER_WIDTH, 1920)
-        if not self.config.contains_key(ConfigDAO.KEY_WALLPAPER_HEIGHT):
-            self.config.set(ConfigDAO.KEY_WALLPAPER_HEIGHT, 1080)
-        if not self.config.contains_key(ConfigDAO.KEY_BLUR_AMOUNT):
-            self.config.set(ConfigDAO.KEY_BLUR_AMOUNT, 10)
-        if not self.config.contains_key(ConfigDAO.KEY_BLEND_RATIO):
-            self.config.set(ConfigDAO.KEY_BLEND_RATIO, 0.02)
+        self.timer.start(self.settings.change_interval)
 
     def trayEvent(self, ev: QEvent):
         if ev.type() == QEvent.Type.Wheel:
@@ -206,7 +181,7 @@ class MainController:
         self.settings_action.setEnabled(False)
         self.next_thread.start()
         self.timer.stop()
-        self.timer.start(self.interval)
+        self.timer.start(self.settings.change_interval)
 
     def context_previous(self):
         """shows the previous wallpaper."""
@@ -223,7 +198,7 @@ class MainController:
         self.settings_action.setEnabled(False)
         self.previous_thread.start()
         self.timer.stop()
-        self.timer.start(self.interval)
+        self.timer.start(self.settings.change_interval)
 
     def action_completed(self):
         self.settings_action.setEnabled(True)
@@ -248,7 +223,9 @@ class MainController:
     def settings_saved(self):
         """called after the settings are saved. Reloads the wallpapers and restarts the timer."""
         logging.debug("Settings saved")
+        self.settings = self.settings_dao.load()
+        self.changer.settings = self.settings
+
         self.reload_thread.start()
-        self.interval = int(self.config.get(ConfigDAO.KEY_INTERVAL))
         self.timer.stop()
-        self.timer.start(self.interval)
+        self.timer.start(self.settings.change_interval)

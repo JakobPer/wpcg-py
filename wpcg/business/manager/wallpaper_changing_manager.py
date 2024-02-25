@@ -17,7 +17,7 @@ from pathlib import Path
 import requests
 
 # only import on windows
-from data.dao.config_dao import ConfigDAO
+from data.model.settings_model import SettingsModel
 from data.dao.wallpaper_dao import WallpaperDAO
 from utils import utils
 from utils.imageutils import ImageUtils
@@ -36,9 +36,9 @@ class WallpaperChangingManager:
     prev_counter = 1
     wpstore = None
 
-    def __init__(self, config: ConfigDAO):
+    def __init__(self, settings: SettingsModel):
         """Initializes the wallpaper changer. Loads all wallpapers."""
-        self.config = config
+        self.settings = settings
         self.prev_counter = 1
         self.wpstore = WallpaperDAO()
         self.download_dir = utils.get_download_dir()
@@ -107,7 +107,7 @@ class WallpaperChangingManager:
         :param image: the full path to the image
         """
 
-        prettification_enabled = self.config.get(ConfigDAO.KEY_PRETTIFICATION_ENABLED) == "True"
+        prettification_enabled = self.settings.prettification_enabled
 
         im = image
         # already set image before it was prettified as preview
@@ -116,14 +116,14 @@ class WallpaperChangingManager:
         if thread.isInterruptionRequested(): return
 
         if prettification_enabled:
-            threshold = float(self.config.get(ConfigDAO.KEY_PRETTIFICATION_THRESHOLD))
-            repeat_background_enabled = self.config.get(ConfigDAO.KEY_REPEAT_BACKGROUND_ENABLED) == "True"
-            blur_background_enabled = self.config.get(ConfigDAO.KEY_BLUR_BACKGROUND_ENABLED) == "True"
-            blend_edges_enabled = self.config.get(ConfigDAO.KEY_BLEND_EDGES_ENABLED) == "True"
-            wallpaper_width = int(self.config.get(ConfigDAO.KEY_WALLPAPER_WIDTH))
-            wallpaper_height = int(self.config.get(ConfigDAO.KEY_WALLPAPER_HEIGHT))
-            blur_amount = float(self.config.get(ConfigDAO.KEY_BLUR_AMOUNT))
-            blend_ratio = float(self.config.get(ConfigDAO.KEY_BLEND_RATIO))
+            threshold = self.settings.prettification_threshold
+            repeat_background_enabled = self.settings.repeat_background
+            blur_background_enabled = self.settings.blur_background
+            blend_edges_enabled = self.settings.blend_edges
+            wallpaper_width = self.settings.wallpaper_width
+            wallpaper_height = self.settings.wallpaper_height
+            blur_amount = self.settings.blur_amount
+            blend_ratio = self.settings.blend_ratio
             try:
                 format = 'jpeg'
                 imname = Path(im).name

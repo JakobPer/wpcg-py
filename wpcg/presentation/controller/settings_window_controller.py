@@ -8,7 +8,7 @@ import logging
 from PySide6.QtCore import QTime, Qt
 from PySide6.QtWidgets import QMainWindow, QListWidgetItem, QFileDialog, QDialog, QMessageBox
 
-from data.dao.config_dao import ConfigDAO
+from data.dao.settings_dao import SettingsDAO
 from data.dao.wallpaper_dao import WallpaperDAO
 from data.model.wallpaper_source_model import WallpaperSourceModel
 from presentation.controller.web_dialog_controller import WebDialogController
@@ -38,12 +38,7 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
             super().__init__(*__args)
             self.source = source
 
-    config = None
-    wpstore = None
-    saved_callback = None
-    selected = -1
-
-    def __init__(self, config: ConfigDAO, wpstore: WallpaperDAO, saved_callback):
+    def __init__(self, settings_dao: SettingsDAO, wpstore: WallpaperDAO, saved_callback):
         """
         Initializes the Settings window.
 
@@ -54,7 +49,9 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         super(SettingsWindowController, self).__init__()
         self.setupUi(self)
 
-        self.config = config
+        self.selected = -1
+
+        self.settings_dao = settings_dao
         self.saved_callback = saved_callback
 
         self.lvSources.clear()
@@ -137,16 +134,18 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
 
         time = self.teInterval.time()
         interval = time.msecsSinceStartOfDay()
-        self.config.set(ConfigDAO.KEY_INTERVAL, interval)
-        self.config.set(ConfigDAO.KEY_PRETTIFICATION_ENABLED, str(self.cb_enable_prettification.isChecked()))
-        self.config.set(ConfigDAO.KEY_REPEAT_BACKGROUND_ENABLED, str(self.cb_repeat_backround.isChecked()))
-        self.config.set(ConfigDAO.KEY_BLUR_BACKGROUND_ENABLED, str(self.cb_blur_background.isChecked()))
-        self.config.set(ConfigDAO.KEY_BLEND_EDGES_ENABLED, str(self.cb_blend_edges.isChecked()))
-        self.config.set(ConfigDAO.KEY_WALLPAPER_WIDTH, self.sb_width.value())
-        self.config.set(ConfigDAO.KEY_WALLPAPER_HEIGHT, self.sb_height.value())
-        self.config.set(ConfigDAO.KEY_BLUR_AMOUNT, self.dsb_amount.value())
-        self.config.set(ConfigDAO.KEY_BLEND_RATIO, self.dsb_blend_ratio.value())
-        self.config.set(ConfigDAO.KEY_PRETTIFICATION_THRESHOLD, self.dsb_threshold.value())
+        self.settings.change_interval = interval
+        self.settings.prettification_enabled = self.cb_enable_prettification.isChecked()
+        self.settings.repeat_background = self.cb_repeat_backround.isChecked()
+        self.settings.blur_background = self.cb_blur_background.isChecked()
+        self.settings.blend_edges = self.cb_blend_edges.isChecked()
+        self.settings.wallpaper_width = self.sb_width.value()
+        self.settings.wallpaper_height = self.sb_height.value()
+        self.settings.blur_amount = self.dsb_amount.value()
+        self.settings.blend_ratio = self.dsb_blend_ratio.value()
+        self.settings.prettification_threshold = self.dsb_threshold.value()
+        self.settings_dao.save(self.settings)
+
         logging.debug("new interval: %d", interval)
 
         self.hide()
@@ -234,35 +233,29 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         """
         Reloads the config and sets the ui values.
         """
+
+        self.settings = self.settings_dao.load()
+
+        # reload wallpaper list
         self.lvSources.clear()
         wpsources = self.wpstore.get_sources()
         for source in wpsources:
             self.lvSources.addItem(self.create_list_item(source))
-        interval = int(self.config.get(ConfigDAO.KEY_INTERVAL, "0"))
-        self.prettification_enabled = self.config.get(ConfigDAO.KEY_PRETTIFICATION_ENABLED, "False") == "True"
-        self.repeat_background_enabled = self.config.get(ConfigDAO.KEY_REPEAT_BACKGROUND_ENABLED, "False") == "True"
-        self.blur_background_enabled = self.config.get(ConfigDAO.KEY_BLUR_BACKGROUND_ENABLED, "False") == "True"
-        self.blend_edges_enabled = self.config.get(ConfigDAO.KEY_BLEND_EDGES_ENABLED, "False") == "True"
-        self.wallpaper_width = int(self.config.get(ConfigDAO.KEY_WALLPAPER_WIDTH))
-        self.wallpaper_height = int(self.config.get(ConfigDAO.KEY_WALLPAPER_HEIGHT))
-        self.blur_amount = float(self.config.get(ConfigDAO.KEY_BLUR_AMOUNT))
-        self.blend_ratio = float(self.config.get(ConfigDAO.KEY_BLEND_RATIO))
-        self.prettification_threshold = float(self.config.get(ConfigDAO.KEY_PRETTIFICATION_THRESHOLD))
 
         time = QTime(0, 0)
-        time = time.addMSecs(interval)
+        time = time.addMSecs(self.settings.change_interval)
         self.teInterval.setTime(time)
 
-        self.cb_enable_prettification.setChecked(self.prettification_enabled)
-        self.cb_repeat_backround.setChecked(self.repeat_background_enabled)
-        self.cb_blur_background.setChecked(self.blur_background_enabled)
-        self.cb_blend_edges.setChecked(self.blend_edges_enabled)
+        self.cb_enable_prettification.setChecked(self.settings.prettification_enabled)
+        self.cb_repeat_backround.setChecked(self.settings.repeat_background)
+        self.cb_blur_background.setChecked(self.settings.blur_background)
+        self.cb_blend_edges.setChecked(self.settings.blend_edges)
 
-        self.dsb_threshold.setValue(self.prettification_threshold)
-        self.sb_width.setValue(self.wallpaper_width)
-        self.sb_height.setValue(self.wallpaper_height)
-        self.dsb_amount.setValue(self.blur_amount)
-        self.dsb_blend_ratio.setValue(self.blend_ratio)
+        self.dsb_threshold.setValue(self.settings.prettification_threshold)
+        self.sb_width.setValue(self.settings.wallpaper_width)
+        self.sb_height.setValue(self.settings.wallpaper_height)
+        self.dsb_amount.setValue(self.settings.blur_amount)
+        self.dsb_blend_ratio.setValue(self.settings.blend_ratio)
 
         self.cb_autostart.setChecked(self.is_windows_autostart_enabled())
 
