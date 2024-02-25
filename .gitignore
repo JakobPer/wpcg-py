@@ -220,6 +220,7 @@ pip-selfcheck.json
 
 *.build
 *.dist
+*.onefile-build
 
 *.exe
 *.bin
