@@ -59,7 +59,7 @@ class MainController:
             if self.changer is not None:
                 self.changer.reload_wallpaper_list()
 
-    def __init__(self, app: QApplication, icon: QIcon, loadingIcon: QIcon):
+    def __init__(self, app: QApplication):
         """
         Initializes the Wallpaperchanger. Loads settings and wallpapers. Creates TrayIcon and Settings.
 
@@ -92,30 +92,49 @@ class MainController:
         self.settings_window = SettingsWindowController(self.config, self.changer.wpstore, self.settings_saved)
 
         # create tray icon
-        self.icon = icon
-        self.loading_icon = loadingIcon
+        self.icon = QIcon(u":icons/icons/icon.ico")
+        self.loading_icon = QIcon(u":icons/icons/icon_loading.ico")
+
         self.trayicon = QSystemTrayIcon()
-        self.trayicon.setIcon(icon)
+        self.trayicon.setIcon(self.icon)
         self.trayicon.activated.connect(self.activated)  # icon double click
         self.trayicon.event = self.trayEvent
 
         # context menu actions of the icon
         settingsIcon = QIcon()
-        settingsIcon.addPixmap(QPixmap(':icons/icons/ic_fluent_settings_24_filled.svg'), QIcon.Mode.Normal, QIcon.State.Off)
+        settingsIconName=u"settings-configure"
+        if QIcon.hasThemeIcon(settingsIconName):
+            settingsIcon = QIcon.fromTheme(settingsIconName)
+        else:
+            settingsIcon.addPixmap(QPixmap(':icons/icons/ic_fluent_settings_24_filled.svg'), QIcon.Mode.Normal, QIcon.State.Off)
         self.settings_action = QAction(settingsIcon, "Settings")
         self.settings_action.triggered.connect(self.show_settings)
 
         nextIcon = QIcon()
-        nextIcon.addPixmap(QPixmap(':icons/icons/ic_fluent_arrow_right_24_filled.svg'), QIcon.Mode.Normal, QIcon.State.Off)
+        nextIconName = u"arrow-right"
+        if QIcon.hasThemeIcon(nextIconName):
+            nextIcon = QIcon.fromTheme(nextIconName)
+        else:
+            nextIcon.addPixmap(QPixmap(':icons/icons/ic_fluent_arrow_right_24_filled.svg'), QIcon.Mode.Normal, QIcon.State.Off)
         self.next_action = QAction(nextIcon, "Next wallpaper")
         self.next_action.triggered.connect(self.context_next)
 
         prevIcon = QIcon()
-        prevIcon.addPixmap(QPixmap(':icons/icons/ic_fluent_arrow_left_24_filled.svg'), QIcon.Mode.Normal, QIcon.State.Off)
+        prevIconName = u"arrow-left"
+        if QIcon.hasThemeIcon(prevIconName):
+            prevIcon = QIcon.fromTheme(prevIconName)
+        else:
+            prevIcon.addPixmap(QPixmap(':icons/icons/ic_fluent_arrow_left_24_filled.svg'), QIcon.Mode.Normal, QIcon.State.Off)
         self.prev_action = QAction(prevIcon, "Previous wallpaper")
         self.prev_action.triggered.connect(self.context_previous)
 
-        self.exit_action = QAction("Exit")
+        exitIcon = QIcon()
+        exitIconName = u"application-exit"
+        if QIcon.hasThemeIcon(exitIconName):
+            exitIcon = QIcon.fromTheme(exitIconName)
+            self.exit_action = QAction(exitIcon, "Exit")
+        else:
+            self.exit_action = QAction("Exit")
         self.exit_action.triggered.connect(self.close)
 
         # create the context menu

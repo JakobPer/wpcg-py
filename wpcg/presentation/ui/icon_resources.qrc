@@ -7,7 +7,7 @@
     <file>../../icons/ic_fluent_delete_24_filled.svg</file>
     <file>../../icons/ic_fluent_edit_24_filled.svg</file>
     <file>../../icons/ic_fluent_link_24_filled.svg</file>
-    <file>../../icons/Icon.ico</file>
+    <file>../../icons/icon.ico</file>
     <file>../../icons/icon_loading.ico</file>
   </qresource>
 </RCC>

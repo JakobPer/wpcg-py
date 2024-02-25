@@ -1,11 +1,11 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
-name: Python application
+name: Multiplatform build
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "main" ]
 
 permissions:
   contents: read
@@ -29,10 +29,13 @@ jobs:
         # Version range or exact version of Python or PyPy to use, using SemVer's version range syntax. Reads from .python-version if unset.
         python-version: '3.10'
         # Used to specify a package manager for caching in the default directory. Supported values: pip, pipenv, poetry.
-        cache: 'pipenv'
+        cache: 'pip'
         # Used to specify the path to dependency files. Supports wildcards or a list of file names for caching multiple dependencies.
         cache-dependency-path: |
-            './requirements.txt'
+            requirements.txt
+    - run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
     - name: Build executables from Python projects
       uses: Nuitka/Nuitka-Action@v1.1
@@ -41,20 +44,32 @@ jobs:
         script-name: 'wpcg/wpcg.py'
         standalone: true
         onefile: true
+        disable-console: true
         enable-plugins: pyside6
         company-name: 'github.com/JakobPer'
         product-name: 'wpcg'
-        product-description: 'wpcg'
+        file-description: 'wpcg'
         file-version: '0.0.1'
-        linux-icon: 'wpcg/icons/linux/256.png'
         windows-icon-from-ico: 'wpcg/icons/icon.ico'
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v3
       with:
-         name: ${{ runner.os }} Build
+         name: wpcg_${{ runner.os }}
          path: | # match what's created for the 3 OSes
             build/*.exe
             build/*.bin
             build/*.app/**/*
+            
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Release
+        uses: fnkr/github-action-ghr@v1.3
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GHR_COMPRESS: xz
+          GHR_PATH: build/
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

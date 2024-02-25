@@ -14,6 +14,13 @@ from data.model.wallpaper_source_model import WallpaperSourceModel
 from presentation.controller.web_dialog_controller import WebDialogController
 from presentation.ui.ui_settings import Ui_SettingsWindow
 
+import platform
+import os
+import sys
+
+if platform.system() == "Windows":
+    import winreg
+
 
 class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
     """
@@ -68,7 +75,6 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
 
         # bottom
         self.btnOk.pressed.connect(self.ok_pressed)
-        self.btnCancel.pressed.connect(self.cancel_pressed)
 
         # set config properties
         self.prettification_enabled = False
@@ -85,6 +91,13 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         self.cb_repeat_backround.stateChanged.connect(self.cb_repeat_backround_clicked)
         self.cb_blur_background.stateChanged.connect(self.cb_blur_background_clicked)
         self.cb_blend_edges.stateChanged.connect(self.cb_blend_edges_clicked)
+
+        # windows tab
+        windows_tab_index = self.tabWidget.indexOf(self.tab_windows)
+        self.tabWidget.setTabVisible(windows_tab_index, platform.system() == "Windows")
+        self.cb_autostart.stateChanged.connect(self.cb_autostart_windows_changed)
+        # ToDo: re-enable once its working
+        self.cb_autostart.setEnabled(False)
 
         self.reload_config()
 
@@ -139,9 +152,6 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         self.hide()
         self.saved_callback()
 
-    def cancel_pressed(self):
-        """Called on cancel. Hides the window."""
-        self.hide()
 
     def remove_pressed(self):
         """Called when the remove button is pressed. Removes the item from the list and from the WPStore."""
@@ -254,6 +264,8 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         self.dsb_amount.setValue(self.blur_amount)
         self.dsb_blend_ratio.setValue(self.blend_ratio)
 
+        self.cb_autostart.setChecked(self.is_windows_autostart_enabled())
+
         self.reset_visibilities()
 
     def reset_visibilities(self):
@@ -280,3 +292,10 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
     def cb_blend_edges_clicked(self):
         self.blend_edges_enabled = self.cb_blend_edges.isChecked()
         self.reset_visibilities()
+
+    def cb_autostart_windows_changed(self):
+        pass # ToDo: implement without registry
+
+    def is_windows_autostart_enabled(self):
+        return False
+

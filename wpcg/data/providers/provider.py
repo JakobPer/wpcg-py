@@ -84,47 +84,39 @@ class FileProvider(Provider):
 
         return target
 
-
-class RedditProvider(Provider):
+class ZeroChanProvider(Provider):
 
     def __init__(self, source: WallpaperSourceModel, wpstore: WallpaperDAO, download_dir: string):
-        if not source.url.startswith("http"):
-            raise Exception("Not a http/s URL")
         super().__init__(source, wpstore, download_dir)
         self.wplist = []
 
     def reload(self):
         self.wplist = []
 
-        # split url and check if it is json link and add limit to 100 so we get 100 posts
-        o = urlsplit(self.source.url)
+        split = urlsplit(self.source.url)
         url = urlunsplit((
-            o[0],
-            o[1],
-            o[2] if o[2].endswith(".json") else o[2] + ".json",
-            o[3] + "&limit=100",
-            o[4]
+            split[0],
+            split[1],
+            split[2],
+            (split[3] if 'json' in split[3] else split[3]+'&json') + '&l=250',
+            split[4],
         ))
-        logging.debug("Parsing reddit url: %s", url)
-        # get reddit json
-        cookie = {"over18": "0" } # disable nsfw stuff
+
+        logging.debug("Parsing zerochan url: %s", url)
+        # get zerochan json
         try:
-            r = requests.get(url, headers={'User-agent': 'wpcg test'}, cookies=cookie)
-            j = r.json()
-            for elem in j['data']['children']:
-                url = elem['data']['url']
-                over18 = elem['data']['over_18']
-                if self.is_image(url):
-                    # if it is an image add it to the list
-                    if not over18:
-                        self.wplist.append(url)
+            r = requests.get(url, headers={'User-agent': 'wpcg test'})
+            json = r.json()
+            for elem in json['items']:
+                id = elem['id']
+                self.wplist.append(id)
         except Exception as e:
-            logging.error("Could not get reddit page %s", url)
+            logging.error("Could not get zerochan page %s", url)
             logging.error(str(e))
 
         shown = self.wpstore.get_all()
         for s in shown:
-            if self.wplist.__contains__(s):
+            if s in self.wplist:
                 self.wplist.remove(s)
 
         random.shuffle(self.wplist)
@@ -137,23 +129,25 @@ class RedditProvider(Provider):
             if len(self.wplist) == 0:  # we really did not find any
                 logging.warning("no usable wallpapers found")
                 return
+        
+        id = self.wplist.pop()
+        url = "https://zerochan.net/" + str(id) +"?json"
 
-        url = self.wplist[0]
-        self.wplist.remove(url)
-        if url.startswith("http"):
-            # if it is a web url, check if we have downloaded it previously, else download it
-            target = os.path.join(self.download_dir, url.split('/')[-1])
+        try:
+            r = requests.get(url, headers={'User-agent': 'wpcg test'} )
+            json = r.json()
+            url = json['full']
+            target = os.path.join(self.download_dir,unquote(url.split('/')[-1]))
             if not os.path.exists(target):
-                try:
-                    logging.debug("Downloading: %s", url)
-                    urllib.request.urlretrieve(url, target)
-                except:
-                    logging.error("Image %s could not be downloaded", url)
+                logging.debug("Downloading: %s", url)
+                urllib.request.urlretrieve(url, target)
                 logging.debug("downloaded to: " + target)
             else:
                 logging.debug("already downloaded")
-        else:
-            return self.get_next()
+
+        except Exception as e:
+            logging.error("Could not get zerochan page %s", url)
+            logging.error(str(e))
 
         if not os.path.isfile(target):
             return None
@@ -165,8 +159,8 @@ def get_providers(sources: List[WallpaperSourceModel], wp_dao: WallpaperDAO, wal
         -> List[Provider]:
     providers = []
     for source in sources:
-        if source.url.startswith("http"):
-            providers.append(RedditProvider(source, wp_dao, wallpaper_dir))
+        if 'zerochan' in source.url:
+            providers.append(ZeroChanProvider(source, wp_dao, wallpaper_dir))
         else:
             providers.append(FileProvider(source, wp_dao, wallpaper_dir))
     return providers

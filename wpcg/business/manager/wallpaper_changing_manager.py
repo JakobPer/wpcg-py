@@ -125,13 +125,14 @@ class WallpaperChangingManager:
             blur_amount = float(self.config.get(ConfigDAO.KEY_BLUR_AMOUNT))
             blend_ratio = float(self.config.get(ConfigDAO.KEY_BLEND_RATIO))
             try:
+                format = 'jpeg'
                 imname = Path(im).name
-                imname = os.path.splitext(imname)[0]+'.jpg'
+                imname = os.path.splitext(imname)[0]+'.'+format
                 target = os.path.join(self.prettified_dir, imname)
                 if ImageUtils.make_pretty(image, target, repeat_background=repeat_background_enabled,
                                           blend_edges=blend_edges_enabled, blur_background=blur_background_enabled,
                                           width=wallpaper_width, height=wallpaper_height, sigma=blur_amount,
-                                          blend_ratio=blend_ratio, thresh=threshold, thread=thread):
+                                          blend_ratio=blend_ratio, thresh=threshold, format=format, quality=95):
                     logging.debug("wallpaper prettified")
                     im = target
                 else:
@@ -139,22 +140,30 @@ class WallpaperChangingManager:
             except Exception as e:
                 logging.error("Could not prettyfy wallpaper!", exc_info=True)
 
-        self._set_wallpaper_platform(im)
+        self._set_wallpaper_for_platform(im)
 
 
-    def _set_wallpaper_platform(self, image: string):
+    def _set_wallpaper_for_platform(self, image: string):
         """
         Sets the wallpaper for the correct target platform
 
         :param image: path to the image
         """
         if platform.system() == "Linux":
-            self._set_wallpaper_gnome(image)
+            #self._set_wallpaper_gnome(image)
+            filepath = os.path.abspath(image)
+            self._set_wallpaper_kde(filepath)
         elif platform.system() == "Windows":
             self._set_wallpaper_windows(image)
         else:
             logging.error("Could not detect OS type!")
             logging.error("Only supporting Linux(Gnome3) and Windows. Detected: %s" % platform.system())
+
+    def _set_wallpaper_kde(self, image):
+
+        call(['plasma-apply-wallpaperimage', image])
+
+        return True
 
     def _set_wallpaper_gnome(self, image_file_with_path):
         """

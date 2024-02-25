@@ -217,3 +217,10 @@ pip-selfcheck.json
 
 *.db
 !/src/build/
+
+*.build
+*.dist
+*.onefile-build
+
+*.exe
+*.bin
