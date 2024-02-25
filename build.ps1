@@ -1,5 +1,6 @@
 nuitka --standalone `
  --onefile `
+ --output-dir=build `
  --plugin-enable=pyside6 `
  --disable-console `
  --company-name='github.com/JakobPer' `

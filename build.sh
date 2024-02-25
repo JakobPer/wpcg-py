@@ -4,6 +4,7 @@ nuitka3 --standalone \
  --onefile \
  --plugin-enable=pyside6 \
  --disable-console \
+ --output-dir=build \
  --company-name='github.com/JakobPer' \
  --product-name='wpcg' \
  --file-description='wpcg' \
