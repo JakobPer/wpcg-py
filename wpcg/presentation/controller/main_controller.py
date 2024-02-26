@@ -212,7 +212,6 @@ class MainController:
 
     def close(self):
         """the close event. Hide the icon (else it stays in the taskbar) and stop everything."""
-        self.changer.wpstore.close()
         self.trayicon.hide()
         self.timer.stop()
         self.app.quit()

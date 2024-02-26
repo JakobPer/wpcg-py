@@ -124,9 +124,9 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         folder = QFileDialog.getExistingDirectory(parent=self, caption="Select wallpaper directory")
         if folder == "":
             return
-        source = WallpaperSourceModel(folder)
-        self.wpstore.add_source(source)
+        source = WallpaperSourceModel(-1, folder)
         self.lvSources.addItem(self.create_list_item(source))
+        self.wpstore.add_source(source)
 
     def ok_pressed(self):
         """Called when ok is pressed. Saves the settings and calls the saved callback."""
@@ -172,7 +172,7 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         if not selected:
             return
 
-        source: SettingsWindowController.SourceListWidgetItem = selected[0].source
+        source = selected[0].source
         if source.url.startswith("http"):
             dialog = WebDialogController()
             dialog.leURL.setText(source.url)
@@ -188,17 +188,16 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
             return
         source.url = folder
         selected[0].setText(folder)
-        self.wpstore.commit()
+        self.wpstore.update_source(source)
 
-    def listitem_changed(self, item: SourceListWidgetItem):
+    def listitem_changed(self, item: QListWidgetItem):
         """
         Called when a list item is changed. Updates the item int WPStore.
         :param item: the changed item
         """
-        
         source = item.source
         source.enabled = item.checkState() == Qt.CheckState.Checked
-        self.wpstore.commit()
+        self.wpstore.update_source(source)
 
     def web_pressed(self):
         """
@@ -208,9 +207,9 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         ret = dialog.exec()
         if ret == QDialog.DialogCode.Accepted:
             url = dialog.leURL.text()
-            source = WallpaperSourceModel(url)
-            self.wpstore.add_source(source)
+            source = WallpaperSourceModel(-1, url)
             self.lvSources.addItem(self.create_list_item(source))
+            self.wpstore.add_source(source)
 
     def show_error_message(self, text):
         """
