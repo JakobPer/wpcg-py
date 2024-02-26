@@ -3,13 +3,16 @@
 # 
 # Full notice in Readme.md
 
-import sqlite3
 import string
+from typing import List
 from os import path
 
 import utils.utils as utils
-from data.model.wallpaper_source_model import WallpaperSourceModel
+from data.model.wallpaper_source_model import WallpaperSourceModel, HistoryModel, Base
 from PySide6 import QtCore
+
+from sqlalchemy import create_engine, select
+from sqlalchemy.orm import Session
 
 _mutex = QtCore.QMutex()
 
@@ -23,45 +26,28 @@ class WallpaperDAO:
         """
         Initializes the WPStore. Creates the database tables if they do not already exist.
         """
-        self._database_url = path.join(utils.get_app_dir(), "wpstore.db")
+        self._database_url = "sqlite:///" + path.join(utils.get_app_dir(), "database.db")
         with QtCore.QMutexLocker(_mutex):
-            conn = self.__connect()
-            # create history table if it does not exist already
-            c = conn.cursor()
-            # c.execute("DROP TABLE IF EXISTS history")
-
-            c.execute("CREATE TABLE IF NOT EXISTS history ("
-                      "pk     INTEGER PRIMARY KEY,"
-                      "uri    TEXT,"
-                      "sourceid INTEGER,"
-                      "ignored BOOLEAN);")
-
-            c.execute("CREATE TABLE IF NOT EXISTS wpsources ("
-                      "id    INTEGER PRIMARY KEY,"
-                      "url  TEXT,"
-                      "enabled BOOLEAN);")
-
-            conn.commit()
-            conn.close()
+            self.engine = self.__connect()
+            Base.metadata.create_all(self.engine)
 
     def __connect(self):
-        connection = sqlite3.connect(self._database_url)
+        connection = create_engine(self._database_url, echo=True)
         return connection
 
-    def add_history_entry(self, entry: string, source_id: int):
+    def add_history_entry(self, entry: string, wallpaper_source: WallpaperSourceModel):
         """
         Adds an entry to the history. Use the full path for the history to be able to compare it.
 
         :param entry: the full path to the wallpaper.
         """
         with QtCore.QMutexLocker(_mutex):
-            conn = self.__connect()
-            c = conn.cursor()
-            c.execute("INSERT INTO history (uri, sourceid, ignored) VALUES (?,?, 'FALSE')", [entry, source_id])
-            conn.commit()
-            conn.close()
+            with Session(self.engine) as session:
+                entry = HistoryModel(entry, wallpaper_source)
+                session.add(entry)
+                session.commit()
 
-    def get_all(self, ignored: bool = False):
+    def get_all(self, ignored: bool = False) -> List[HistoryModel]:
         """
         Returns all the history entries.
 
@@ -69,15 +55,12 @@ class WallpaperDAO:
         :return: a list of strings containing the full paths of the wallpapers
         """
         with QtCore.QMutexLocker(_mutex):
-            ret = []
-            conn = self.__connect()
-            c = conn.cursor()
-            for row in c.execute("SELECT uri FROM history WHERE ignored = ?", ['TRUE' if ignored else 'FALSE']):
-                ret.append(row[0])
-            conn.close()
-            return ret
+            with Session(self.engine) as session:
+                stmt = select(HistoryModel).where(HistoryModel.is_ignored == ignored)
+                return [x for x in session.scalars(stmt)]
 
-    def get_previous(self, index: int) -> string:
+
+    def get_previous(self, index: int) -> HistoryModel:
         """
         Returns the last added wallpaper of the history.
 
@@ -86,15 +69,13 @@ class WallpaperDAO:
         :return: the path to the last wallpaper depending on the index or None if none was found.
         """
         with QtCore.QMutexLocker(_mutex):
-            conn = self.__connect()
-            c = conn.cursor()
-            ret = c.execute("Select uri from history where pk = (select max(pk) from history) - ?", [index])
-            entry = ret.fetchone()
-            conn.close()
-            if entry is None:
-                return None
-            else:
-                return entry[0]
+            with Session(self.engine) as session:
+                stmt = select(HistoryModel).order_by(HistoryModel.id.desc())
+                entries = session.scalars(stmt).all()
+                if entries is None:
+                    return None
+                else:
+                    return entries[index] if index >= 0 and index < len(entries) else None
 
     def is_in_history(self, uri: string, ignored: bool = False):
         """
@@ -105,30 +86,29 @@ class WallpaperDAO:
         :return: true if it is in the ignored or not ignored history
         """
         with QtCore.QMutexLocker(_mutex):
-            conn = self.__connect()
-            ret = conn.execute("SELECT uri FROM history WHERE uri LIKE ? and ignored = ?", [uri, ignored])
-            contains = ret.fetchone is not None
-            conn.close()
-            return contains
+            with Session(self.engine) as session:
+                stmt = select(HistoryModel).where(HistoryModel.entry == uri, HistoryModel.is_ignored == ignored )
+                ret = session.scalars(stmt).first()
+                return ret is not None
 
     def ignore_all(self):
         """
         Sets all not already ignored history entries to ignored.
         """
         with QtCore.QMutexLocker(_mutex):
-            conn = self.__connect()
-            c = conn.cursor()
-            c.execute("UPDATE history SET ignored = 'TRUE' WHERE ignored = 'FALSE'")
-            conn.commit()
-            conn.close()
+            with Session(self.engine) as session:
+                stmt = select(HistoryModel).where(HistoryModel.is_ignored == False)
+                for entry in session.scalars(stmt):
+                    entry.is_ignored = True
+                session.commit()
 
     def ignore_all_by_sourceid(self, source_id: int):
         with QtCore.QMutexLocker(_mutex):
-            conn = self.__connect()
-            c = conn.cursor()
-            c.execute("UPDATE history SET ignored = 'TRUE' WHERE ignored = 'FALSE' and sourceid = ?", [source_id])
-            conn.commit()
-            conn.close()
+            with Session(self.engine) as session:
+                stmt = select(HistoryModel).where(HistoryModel.is_ignored == False, HistoryModel.wallpaper_source_id == source_id)
+                for entry in session.scalars(stmt):
+                    entry.is_ignored = True
+                session.commit()
 
     def get_sources(self, only_enabled=False):
         """
@@ -138,18 +118,13 @@ class WallpaperDAO:
         :return: a list of type WPSource of all the wallpaper sources.
         """
         with QtCore.QMutexLocker(_mutex):
-            conn = self.__connect()
-            c = conn.cursor()
-            ret = []
-            if only_enabled:
-                # somehow TRUE does not work on windows using 1 instead
-                for row in c.execute("SELECT * FROM wpsources WHERE enabled = 1;"):
-                    ret.append(WallpaperSourceModel(row[0], row[1], row[2]))
-            else:
-                for row in c.execute("SELECT * FROM wpsources;"):
-                    ret.append(WallpaperSourceModel(row[0], row[1], row[2]))
-            conn.close()
-            return ret
+            with Session(self.engine) as session:
+                if only_enabled:
+                    stmt = select(WallpaperSourceModel).where(WallpaperSourceModel.enabled == True)
+                    return [x for x in session.scalars(stmt)]
+                else:
+                    stmt = select(WallpaperSourceModel)
+                    return [x for x in session.scalars(stmt)]
 
     def add_source(self, source: WallpaperSourceModel):
         """
@@ -158,12 +133,9 @@ class WallpaperDAO:
         :param source: the source to add.
         """
         with QtCore.QMutexLocker(_mutex):
-            conn = self.__connect()
-            c = conn.cursor()
-            c.execute("INSERT INTO wpsources (url, enabled) VALUES(?, ?);", [source.url, source.enabled])
-            source.sid = c.lastrowid
-            conn.commit()
-            conn.close()
+            with Session(self.engine) as session:
+                session.add(source)
+                session.commit()
 
     def delete_source(self, source: WallpaperSourceModel):
         """
@@ -172,11 +144,9 @@ class WallpaperDAO:
         :param source: the source to delete
         """
         with QtCore.QMutexLocker(_mutex):
-            conn = self.__connect()
-            c = conn.cursor()
-            c.execute("DELETE FROM wpsources WHERE id = ?;", [source.sid])
-            conn.commit()
-            conn.close()
+            with Session(self.engine) as session:
+                session.delete(source)
+                session.commit()
 
     def update_source(self, source: WallpaperSourceModel):
         """
@@ -185,9 +155,7 @@ class WallpaperDAO:
         :param source: the source to update
         """
         with QtCore.QMutexLocker(_mutex):
-            conn = self.__connect()
-            c = conn.cursor()
-            c.execute("UPDATE wpsources SET url = ?, enabled = ? WHERE id = ?;",
-                      [source.url, source.enabled, source.sid])
-            conn.commit()
-            conn.close()
+            with Session(self.engine) as session:
+                # probably not the right way to do it
+                session.add(source)
+                session.commit() # probably not the right way to do it

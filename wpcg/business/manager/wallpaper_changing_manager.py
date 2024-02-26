@@ -76,7 +76,7 @@ class WallpaperChangingManager:
 
             self.prev_counter = 1
             self._set_wallpaper(wallpaper, thread)
-            self.wpstore.add_history_entry(wallpaper, self.providers[rand].source.sid)
+            self.wpstore.add_history_entry(wallpaper, self.providers[rand].source)
 
             logging.debug("set wallpaper to: %s" % wallpaper)
 
@@ -86,13 +86,13 @@ class WallpaperChangingManager:
         """
 
         with QtCore.QMutexLocker(_mutex):
-            url = self.wpstore.get_previous(self.prev_counter)
-            if url is None:
+            history_entry = self.wpstore.get_previous(self.prev_counter)
+            if history_entry is None:
                 return
 
             self.prev_counter = self.prev_counter + 1
 
-            target = url
+            target = history_entry.entry # entry is the url/file path
 
             if not os.path.isfile(target):
                 self.previous_wallpaper()

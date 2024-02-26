@@ -124,9 +124,9 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         folder = QFileDialog.getExistingDirectory(parent=self, caption="Select wallpaper directory")
         if folder == "":
             return
-        source = WallpaperSourceModel(-1, folder)
-        self.lvSources.addItem(self.create_list_item(source))
+        source = WallpaperSourceModel(folder)
         self.wpstore.add_source(source)
+        self.lvSources.addItem(self.create_list_item(source))
 
     def ok_pressed(self):
         """Called when ok is pressed. Saves the settings and calls the saved callback."""
@@ -172,7 +172,7 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         if not selected:
             return
 
-        source = selected[0].source
+        source: SettingsWindowController.SourceListWidgetItem = selected[0].source
         if source.url.startswith("http"):
             dialog = WebDialogController()
             dialog.leURL.setText(source.url)
@@ -190,11 +190,12 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         selected[0].setText(folder)
         self.wpstore.update_source(source)
 
-    def listitem_changed(self, item: QListWidgetItem):
+    def listitem_changed(self, item: SourceListWidgetItem):
         """
         Called when a list item is changed. Updates the item int WPStore.
         :param item: the changed item
         """
+        
         source = item.source
         source.enabled = item.checkState() == Qt.CheckState.Checked
         self.wpstore.update_source(source)
@@ -207,9 +208,9 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         ret = dialog.exec()
         if ret == QDialog.DialogCode.Accepted:
             url = dialog.leURL.text()
-            source = WallpaperSourceModel(-1, url)
-            self.lvSources.addItem(self.create_list_item(source))
+            source = WallpaperSourceModel(url)
             self.wpstore.add_source(source)
+            self.lvSources.addItem(self.create_list_item(source))
 
     def show_error_message(self, text):
         """
