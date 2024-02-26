@@ -188,7 +188,7 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
             return
         source.url = folder
         selected[0].setText(folder)
-        self.wpstore.update_source(source)
+        self.wpstore.commit()
 
     def listitem_changed(self, item: SourceListWidgetItem):
         """
@@ -198,7 +198,7 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         
         source = item.source
         source.enabled = item.checkState() == Qt.CheckState.Checked
-        self.wpstore.update_source(source)
+        self.wpstore.commit()
 
     def web_pressed(self):
         """

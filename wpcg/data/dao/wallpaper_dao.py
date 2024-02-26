@@ -28,12 +28,17 @@ class WallpaperDAO:
         """
         self._database_url = "sqlite:///" + path.join(utils.get_app_dir(), "database.db")
         with QtCore.QMutexLocker(_mutex):
-            self.engine = self.__connect()
-            Base.metadata.create_all(self.engine)
+            self._engine = self.__connect()
+            self._session = Session(self._engine)
+            Base.metadata.create_all(self._engine)
 
     def __connect(self):
         connection = create_engine(self._database_url, echo=True)
         return connection
+
+    def close(self):
+        self._session.flush()
+        self._session.close()
 
     def add_history_entry(self, entry: string, wallpaper_source: WallpaperSourceModel):
         """
@@ -42,10 +47,9 @@ class WallpaperDAO:
         :param entry: the full path to the wallpaper.
         """
         with QtCore.QMutexLocker(_mutex):
-            with Session(self.engine) as session:
-                entry = HistoryModel(entry, wallpaper_source)
-                session.add(entry)
-                session.commit()
+            entry = HistoryModel(entry, wallpaper_source)
+            self._session.add(entry)
+            self._session.commit()
 
     def get_all(self, ignored: bool = False) -> List[HistoryModel]:
         """
@@ -55,9 +59,8 @@ class WallpaperDAO:
         :return: a list of strings containing the full paths of the wallpapers
         """
         with QtCore.QMutexLocker(_mutex):
-            with Session(self.engine) as session:
-                stmt = select(HistoryModel).where(HistoryModel.is_ignored == ignored)
-                return [x for x in session.scalars(stmt)]
+            stmt = select(HistoryModel).where(HistoryModel.is_ignored == ignored)
+            return [x for x in self._session.scalars(stmt)]
 
 
     def get_previous(self, index: int) -> HistoryModel:
@@ -69,13 +72,12 @@ class WallpaperDAO:
         :return: the path to the last wallpaper depending on the index or None if none was found.
         """
         with QtCore.QMutexLocker(_mutex):
-            with Session(self.engine) as session:
-                stmt = select(HistoryModel).order_by(HistoryModel.id.desc())
-                entries = session.scalars(stmt).all()
-                if entries is None:
-                    return None
-                else:
-                    return entries[index] if index >= 0 and index < len(entries) else None
+            stmt = select(HistoryModel).order_by(HistoryModel.id.desc())
+            entries = self._session.scalars(stmt).all()
+            if entries is None:
+                return None
+            else:
+                return entries[index] if index >= 0 and index < len(entries) else None
 
     def is_in_history(self, uri: string, ignored: bool = False):
         """
@@ -86,29 +88,26 @@ class WallpaperDAO:
         :return: true if it is in the ignored or not ignored history
         """
         with QtCore.QMutexLocker(_mutex):
-            with Session(self.engine) as session:
-                stmt = select(HistoryModel).where(HistoryModel.entry == uri, HistoryModel.is_ignored == ignored )
-                ret = session.scalars(stmt).first()
-                return ret is not None
+            stmt = select(HistoryModel).where(HistoryModel.entry == uri, HistoryModel.is_ignored == ignored )
+            ret = self._session.scalars(stmt).first()
+            return ret is not None
 
     def ignore_all(self):
         """
         Sets all not already ignored history entries to ignored.
         """
         with QtCore.QMutexLocker(_mutex):
-            with Session(self.engine) as session:
-                stmt = select(HistoryModel).where(HistoryModel.is_ignored == False)
-                for entry in session.scalars(stmt):
-                    entry.is_ignored = True
-                session.commit()
+            stmt = select(HistoryModel).where(HistoryModel.is_ignored == False)
+            for entry in self._session.scalars(stmt):
+                entry.is_ignored = True
+            self._session.commit()
 
     def ignore_all_by_sourceid(self, source_id: int):
         with QtCore.QMutexLocker(_mutex):
-            with Session(self.engine) as session:
-                stmt = select(HistoryModel).where(HistoryModel.is_ignored == False, HistoryModel.wallpaper_source_id == source_id)
-                for entry in session.scalars(stmt):
-                    entry.is_ignored = True
-                session.commit()
+            stmt = select(HistoryModel).where(HistoryModel.is_ignored == False, HistoryModel.wallpaper_source_id == source_id)
+            for entry in self._session.scalars(stmt):
+                entry.is_ignored = True
+            self._session.commit()
 
     def get_sources(self, only_enabled=False):
         """
@@ -118,13 +117,12 @@ class WallpaperDAO:
         :return: a list of type WPSource of all the wallpaper sources.
         """
         with QtCore.QMutexLocker(_mutex):
-            with Session(self.engine) as session:
-                if only_enabled:
-                    stmt = select(WallpaperSourceModel).where(WallpaperSourceModel.enabled == True)
-                    return [x for x in session.scalars(stmt)]
-                else:
-                    stmt = select(WallpaperSourceModel)
-                    return [x for x in session.scalars(stmt)]
+            if only_enabled:
+                stmt = select(WallpaperSourceModel).where(WallpaperSourceModel.enabled == True)
+                return [x for x in self._session.scalars(stmt)]
+            else:
+                stmt = select(WallpaperSourceModel)
+                return [x for x in self._session.scalars(stmt)]
 
     def add_source(self, source: WallpaperSourceModel):
         """
@@ -133,9 +131,8 @@ class WallpaperDAO:
         :param source: the source to add.
         """
         with QtCore.QMutexLocker(_mutex):
-            with Session(self.engine) as session:
-                session.add(source)
-                session.commit()
+            self._session.add(source)
+            self._session.commit()
 
     def delete_source(self, source: WallpaperSourceModel):
         """
@@ -144,18 +141,12 @@ class WallpaperDAO:
         :param source: the source to delete
         """
         with QtCore.QMutexLocker(_mutex):
-            with Session(self.engine) as session:
-                session.delete(source)
-                session.commit()
+            self._session.delete(source)
+            self._session.commit()
 
-    def update_source(self, source: WallpaperSourceModel):
+    def commit(self):
         """
-        Updates the given source in the database.
-
-        :param source: the source to update
+        Commits any pending changes to the data.
         """
         with QtCore.QMutexLocker(_mutex):
-            with Session(self.engine) as session:
-                # probably not the right way to do it
-                session.add(source)
-                session.commit() # probably not the right way to do it
+            self._session.commit() # probably not the right way to do it
