@@ -33,7 +33,7 @@ class WallpaperDAO:
             Base.metadata.create_all(self._engine)
 
     def __connect(self):
-        connection = create_engine(self._database_url, echo=True)
+        connection = create_engine(self._database_url, echo=False)
         return connection
 
     def close(self):
