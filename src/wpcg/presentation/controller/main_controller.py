@@ -34,7 +34,7 @@ class MainController:
 
         def run(self) -> None:
             if self.changer is not None:
-                if self.changer.next_wallpaper():
+                if self.changer.next_wallpaper(self.progress.emit):
                     self.succeeded.emit()
                 else:
                     self.failed.emit()
@@ -91,6 +91,7 @@ class MainController:
         # create tray icon
         self.icon = QIcon(u":icons/icons/icon.ico")
         self.loading_icon = QIcon(u":icons/icons/icon_loading.ico")
+        self.progess_icons = [QIcon(u":icons/icons/progress_{}.ico".format(i)) for i in range(1,25)]
 
         self.trayicon = QSystemTrayIcon()
         self.trayicon.setIcon(self.icon)

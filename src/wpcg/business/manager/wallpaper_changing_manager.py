@@ -13,6 +13,7 @@ from subprocess import call
 from urllib.parse import *
 from data.providers import provider
 from pathlib import Path
+from typing import Callable
 
 import requests
 
@@ -56,7 +57,7 @@ class WallpaperChangingManager:
             for prov in self.providers:
                 prov.reload()
 
-    def next_wallpaper(self)-> bool:
+    def next_wallpaper(self, progress: Callable[[int]])-> bool:
         """
         Switches to the next wallpaper in the list of loaded wallpapers and removes it from the list. if the list is
         empty, set previouly shown wallpapers to ignore and load the wallpapers again.

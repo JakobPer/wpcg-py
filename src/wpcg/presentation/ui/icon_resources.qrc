@@ -9,5 +9,29 @@
     <file>../../icons/ic_fluent_link_24_filled.svg</file>
     <file>../../icons/icon.ico</file>
     <file>../../icons/icon_loading.ico</file>
+    <file>../../icons/progress_1.ico</file>
+    <file>../../icons/progress_2.ico</file>
+    <file>../../icons/progress_3.ico</file>
+    <file>../../icons/progress_4.ico</file>
+    <file>../../icons/progress_5.ico</file>
+    <file>../../icons/progress_6.ico</file>
+    <file>../../icons/progress_7.ico</file>
+    <file>../../icons/progress_8.ico</file>
+    <file>../../icons/progress_9.ico</file>
+    <file>../../icons/progress_10.ico</file>
+    <file>../../icons/progress_11.ico</file>
+    <file>../../icons/progress_12.ico</file>
+    <file>../../icons/progress_13.ico</file>
+    <file>../../icons/progress_14.ico</file>
+    <file>../../icons/progress_15.ico</file>
+    <file>../../icons/progress_16.ico</file>
+    <file>../../icons/progress_17.ico</file>
+    <file>../../icons/progress_18.ico</file>
+    <file>../../icons/progress_19.ico</file>
+    <file>../../icons/progress_20.ico</file>
+    <file>../../icons/progress_21.ico</file>
+    <file>../../icons/progress_22.ico</file>
+    <file>../../icons/progress_23.ico</file>
+    <file>../../icons/progress_24.ico</file>
   </qresource>
 </RCC>
