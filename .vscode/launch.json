@@ -6,16 +6,16 @@
     "configurations": [
         {
             "name": "WPCG",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "wpcg.py",
             "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}/wpcg",
+            "cwd": "${workspaceFolder}/src/wpcg",
             "justMyCode": true
         },
         {
             "name": "build ui",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "build-ui.py",
             "console": "integratedTerminal",

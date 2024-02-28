@@ -21,20 +21,18 @@ from data.model.settings_model import SettingsModel
 from data.dao.wallpaper_dao import WallpaperDAO
 from utils import utils
 from utils.imageutils import ImageUtils
-from PySide6 import QtCore
+from PySide6.QtCore import QMutex, QMutexLocker, QRunnable, QThreadPool, QThread, Signal
 
 if platform.system() == "Windows":
     import ctypes
 
-_mutex = QtCore.QMutex()
+_mutex = QMutex()
 
 
 class WallpaperChangingManager:
     """
     Handles loading, managing, and switching of wallpapers.
     """
-    prev_counter = 1
-    wpstore = None
 
     def __init__(self, settings: SettingsModel):
         """Initializes the wallpaper changer. Loads all wallpapers."""
@@ -52,13 +50,13 @@ class WallpaperChangingManager:
         Then removes all the wallpapers that where already shown to the user. At last shuffles the list to make it
         random.
         """
-        with QtCore.QMutexLocker(_mutex):
+        with QMutexLocker(_mutex):
             wpsources = self.wpstore.get_sources(only_enabled=True)
             self.providers = provider.get_providers(wpsources, self.wpstore, self.download_dir)
             for prov in self.providers:
                 prov.reload()
 
-    def next_wallpaper(self, thread: QtCore.QThread):
+    def next_wallpaper(self)-> bool:
         """
         Switches to the next wallpaper in the list of loaded wallpapers and removes it from the list. if the list is
         empty, set previouly shown wallpapers to ignore and load the wallpapers again.
@@ -66,29 +64,31 @@ class WallpaperChangingManager:
         if len(self.providers) == 0:
             return
 
-        with QtCore.QMutexLocker(_mutex):
+        with QMutexLocker(_mutex):
             rand = random.randrange(0, len(self.providers))
             wallpaper = self.providers[rand].get_next()
 
             # ToDo: proper error handling
             if wallpaper is None:
-                return
+                return False
 
             self.prev_counter = 1
-            self._set_wallpaper(wallpaper, thread)
+            self._set_wallpaper(wallpaper)
             self.wpstore.add_history_entry(wallpaper, self.providers[rand].source.sid)
 
             logging.debug("set wallpaper to: %s" % wallpaper)
 
-    def previous_wallpaper(self, thread: QtCore.QThread):
+            return True
+
+    def previous_wallpaper(self) -> bool:
         """
         Set the wallpaper to the previously shown one.
         """
 
-        with QtCore.QMutexLocker(_mutex):
+        with QMutexLocker(_mutex):
             url = self.wpstore.get_previous(self.prev_counter)
             if url is None:
-                return
+                return False
 
             self.prev_counter = self.prev_counter + 1
 
@@ -97,10 +97,12 @@ class WallpaperChangingManager:
             if not os.path.isfile(target):
                 self.previous_wallpaper()
 
-            self._set_wallpaper(target, thread)
+            self._set_wallpaper(target)
             logging.debug("set to previous wallpaper to: %s", target)
 
-    def _set_wallpaper(self, image: string, thread: QtCore.QThread):
+            return True
+
+    def _set_wallpaper(self, image: string):
         """
         Sets the wallpaper to the given image. Sets it depending on the platform it is running on.
 
@@ -113,7 +115,7 @@ class WallpaperChangingManager:
         # already set image before it was prettified as preview
         # self._set_wallpaper_platform(im)
 
-        if thread.isInterruptionRequested(): return
+        if QThread.currentThread().isInterruptionRequested(): return
 
         if prettification_enabled:
             threshold = self.settings.prettification_threshold
@@ -139,6 +141,8 @@ class WallpaperChangingManager:
                     logging.debug("prettification not needed")
             except Exception as e:
                 logging.error("Could not prettyfy wallpaper!", exc_info=True)
+
+        if QThread.currentThread().isInterruptionRequested(): return
 
         self._set_wallpaper_for_platform(im)
 

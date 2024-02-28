@@ -5,7 +5,7 @@
 
 import logging
 
-from PySide6.QtCore import QThread, QTimer, QEvent, Qt
+from PySide6.QtCore import QThread, QTimer, QEvent, Qt, QRunnable,QThreadPool, Signal, QObject
 from PySide6.QtGui import QIcon, QAction, QPixmap
 from PySide6.QtWidgets import QSystemTrayIcon, QMenu, QApplication
 
@@ -20,44 +20,44 @@ class MainController:
     Wallpaper Changer main class. Handles TrayIcon creation and Settings.
     """
 
-    class NextWallpaperThread(QThread):
+    class ChangeThread (QThread):
+        succeeded = Signal(None)
+        failed = Signal(None)
+        progress = Signal(int)
 
-        def __init__(self, changer: WallpaperChangingManager):
-            QThread.__init__(self)
+        def __init__(self, changer: WallpaperChangingManager) -> None:
+            super().__init__()
+
             self.changer = changer
 
-        def __del__(self):
-            self.wait()
+    class NextWallpaperThread(ChangeThread):
 
-        def run(self):
+        def run(self) -> None:
             if self.changer is not None:
-                self.changer.next_wallpaper(self)
+                if self.changer.next_wallpaper():
+                    self.succeeded.emit()
+                else:
+                    self.failed.emit()
+            else:
+                self.failed.emit()
 
-    class PreviousWallpaperThread(QThread):
+    class PreviousWallpaperThread(ChangeThread):
 
-        def __init__(self, changer: WallpaperChangingManager):
-            QThread.__init__(self)
-            self.changer = changer
-
-        def __del__(self):
-            self.wait()
-
-        def run(self):
+        def run(self) -> None:
             if self.changer is not None:
-                self.changer.previous_wallpaper(self)
+                if self.changer.previous_wallpaper():
+                    self.succeeded.emit()
+                else:
+                    self.failed.emit()
+            else:
+                self.failed.emit()
 
-    class ReloadWallpaperThread(QThread):
+    class ReloadWallpaperThread(ChangeThread):
 
-        def __init__(self, changer: WallpaperChangingManager):
-            QThread.__init__(self)
-            self.changer = changer
-
-        def __del__(self):
-            self.wait()
-
-        def run(self):
+        def run(self) -> None:
             if self.changer is not None:
                 self.changer.reload_wallpaper_list()
+            self.succeeded.emit()
 
     def __init__(self, app: QApplication):
         """
@@ -71,6 +71,8 @@ class MainController:
         self.settings_dao = SettingsDAO()
         self.settings = self.settings_dao.load()
 
+        QThreadPool.globalInstance().setMaxThreadCount(4)
+
         self.wplist = []
         # timer that changes the wallpaper
         self.timer = QTimer()
@@ -79,14 +81,12 @@ class MainController:
 
         # create the changer
         self.changer = WallpaperChangingManager(self.settings)
-        self.next_thread = MainController.NextWallpaperThread(self.changer)
-        self.next_thread.finished.connect(self.action_completed)
-        self.previous_thread = MainController.PreviousWallpaperThread(self.changer)
-        self.previous_thread.finished.connect(self.action_completed)
-        self.reload_thread = MainController.ReloadWallpaperThread(self.changer)
-        self.reload_thread.finished.connect(self.action_completed)
+        self.next_thread: MainController.NextWallpaperThread = None
+        self.previous_thread: MainController.PreviousWallpaperThread = None
+        self.reload_thread: MainController.ReloadWallpaperThread = None
+
         # init settings window
-        self.settings_window = SettingsWindowController(self.settings_dao, self.changer.wpstore, self.settings_saved)
+        self.settings_window = SettingsWindowController(self.settings_dao, self.changer.wpstore, self._settings_saved)
 
         # create tray icon
         self.icon = QIcon(u":icons/icons/icon.ico")
@@ -94,8 +94,8 @@ class MainController:
 
         self.trayicon = QSystemTrayIcon()
         self.trayicon.setIcon(self.icon)
-        self.trayicon.activated.connect(self.activated)  # icon double click
-        self.trayicon.event = self.trayEvent
+        self.trayicon.activated.connect(self._activated)  # icon double click
+        self.trayicon.event = self._trayEvent
 
         # context menu actions of the icon
         settingsIcon = QIcon()
@@ -114,7 +114,7 @@ class MainController:
         else:
             nextIcon.addPixmap(QPixmap(':icons/icons/ic_fluent_arrow_right_24_filled.svg'), QIcon.Mode.Normal, QIcon.State.Off)
         self.next_action = QAction(nextIcon, "Next wallpaper")
-        self.next_action.triggered.connect(self.context_next)
+        self.next_action.triggered.connect(self._context_next)
 
         prevIcon = QIcon()
         prevIconName = u"arrow-left"
@@ -123,7 +123,7 @@ class MainController:
         else:
             prevIcon.addPixmap(QPixmap(':icons/icons/ic_fluent_arrow_left_24_filled.svg'), QIcon.Mode.Normal, QIcon.State.Off)
         self.prev_action = QAction(prevIcon, "Previous wallpaper")
-        self.prev_action.triggered.connect(self.context_previous)
+        self.prev_action.triggered.connect(self._context_previous)
 
         exitIcon = QIcon()
         exitIconName = u"application-exit"
@@ -147,68 +147,76 @@ class MainController:
         self.trayicon.setVisible(True)
 
         # start the timer
-        self.timer.timeout.connect(self.context_next)
+        self.timer.timeout.connect(self._context_next)
         self.timer.start(self.settings.change_interval)
 
-    def trayEvent(self, ev: QEvent):
+    def _trayEvent(self, ev: QEvent):
         if ev.type() == QEvent.Type.Wheel:
-            self.context_next()
+            self._context_next()
             return True
 
         return False
 
     def action_in_progress(self):
-        return self.next_thread.isRunning() or self.previous_thread.isRunning() or self.reload_thread.isRunning()
+        return self.next_thread is not None and self.next_thread.isRunning() or \
+            self.previous_thread is not None and self.previous_thread.isRunning() or \
+            self.reload_thread is not None and self.reload_thread.isRunning()
 
-    def start_loading(self):
+    def _start_loading(self):
         self.trayicon.setIcon(self.loading_icon)
 
-    def stop_loading(self):
+    def _stop_loading(self):
         self.trayicon.setIcon(self.icon)
 
-    def context_next(self):
+    def _context_next(self):
         """shows next wallpaper."""
-        if self.next_thread.isRunning():
+        if self.next_thread is not None and self.next_thread.isRunning():
             self.next_thread.requestInterruption()
             self.next_thread.wait()
-            self.next_thread = MainController.NextWallpaperThread(self.changer)
-            self.next_thread.finished.connect(self.action_completed)
         elif self.action_in_progress():
             logging.debug("Action in progress, aborting")
             return
 
-        self.start_loading()
+        self._start_loading()
         self.settings_action.setEnabled(False)
-        self.next_thread.start()
+        self.next_thread = MainController.NextWallpaperThread(self.changer)
+        self.next_thread.succeeded.connect(self._action_completed)
+        self.next_thread.failed.connect(self._action_failed)
+        self._start_thread(self.next_thread)
         self.timer.stop()
         self.timer.start(self.settings.change_interval)
 
-    def context_previous(self):
+    def _context_previous(self):
         """shows the previous wallpaper."""
-        if self.previous_thread.isRunning():
+        if self.previous_thread is not None and self.previous_thread.isRunning():
             self.previous_thread.requestInterruption()
             self.previous_thread.wait()
-            self.previous_thread = MainController.PreviousWallpaperThread(self.changer)
-            self.previous_thread.finished.connect(self.action_completed)
         elif self.action_in_progress():
             logging.debug("Action in progress, aborting")
             return
 
-        self.start_loading()
+        self._start_loading()
         self.settings_action.setEnabled(False)
-        self.previous_thread.start()
+        self.previous_thread = MainController.PreviousWallpaperThread(self.changer)
+        self.previous_thread.succeeded.connect(self._action_completed)
+        self.previous_thread.failed.connect(self._action_failed)
+        self._start_thread(self.previous_thread)
         self.timer.stop()
         self.timer.start(self.settings.change_interval)
 
-    def action_completed(self):
+    def _action_completed(self):
         self.settings_action.setEnabled(True)
         if not self.action_in_progress():
-            self.stop_loading()
+            self._stop_loading()
 
-    def activated(self, reason):
+    def _action_failed(self):
+        self.trayicon.showMessage("Failed to set wallpaper", "Failed to set wallpaper, try again...", QSystemTrayIcon.MessageIcon.Critical)
+        self._action_completed()
+
+    def _activated(self, reason):
         """called when the icon is double clicked to change to next wallpaper."""
         if reason == QSystemTrayIcon.ActivationReason.Trigger:
-            self.context_next()
+            self._context_next()
 
     def close(self):
         """the close event. Hide the icon (else it stays in the taskbar) and stop everything."""
@@ -220,12 +228,19 @@ class MainController:
         """Shows the settings window."""
         self.settings_window.show()
 
-    def settings_saved(self):
+    def _settings_saved(self):
         """called after the settings are saved. Reloads the wallpapers and restarts the timer."""
         logging.debug("Settings saved")
         self.settings = self.settings_dao.load()
         self.changer.settings = self.settings
 
-        self.reload_thread.start()
+        self.reload_thread = MainController.ReloadWallpaperThread(self.changer)
+        self.reload_thread.succeeded.connect(self._action_completed)
+        self._start_thread(self.reload_thread)
         self.timer.stop()
         self.timer.start(self.settings.change_interval)
+
+    def _start_thread(self, thread: QThread):
+        #QThreadPool.globalInstance().start(thread)
+        thread.start()
+
