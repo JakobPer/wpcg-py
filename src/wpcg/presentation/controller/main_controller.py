@@ -183,6 +183,7 @@ class MainController:
         self.next_thread = MainController.NextWallpaperThread(self.changer)
         self.next_thread.succeeded.connect(self._action_completed)
         self.next_thread.failed.connect(self._action_failed)
+        self.next_thread.progress.connect(self._action_progress)
         self._start_thread(self.next_thread)
         self.timer.stop()
         self.timer.start(self.settings.change_interval)
@@ -213,6 +214,9 @@ class MainController:
     def _action_failed(self):
         self.trayicon.showMessage("Failed to set wallpaper", "Failed to set wallpaper, try again...", QSystemTrayIcon.MessageIcon.Critical)
         self._action_completed()
+
+    def _action_progress(self, progress: int):
+        print(progress)
 
     def _activated(self, reason):
         """called when the icon is double clicked to change to next wallpaper."""

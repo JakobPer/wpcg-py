@@ -17,7 +17,7 @@ import requests
 
 class Provider:
 
-    def __init__(self, source: WallpaperSourceModel, wpstore: WallpaperDAO, download_dir: string):
+    def __init__(self, source: WallpaperSourceModel, wpstore: WallpaperDAO, download_dir: str):
         self.source = source
         self.wpstore = wpstore
         self.download_dir = download_dir
@@ -25,11 +25,11 @@ class Provider:
     def reload(self):
         pass
 
-    def get_next(self) -> string:
+    def get_next(self) -> str:
         return ""
 
     @staticmethod
-    def is_image(img: string):
+    def is_image(img: str):
         """
         Checks file name if it ends in known image endings. (jpg, jpeg, png, bmp, gif)
 
@@ -42,7 +42,7 @@ class Provider:
 
 class FileProvider(Provider):
 
-    def __init__(self, source: WallpaperSourceModel, wpstore: WallpaperDAO, download_dir: string):
+    def __init__(self, source: WallpaperSourceModel, wpstore: WallpaperDAO, download_dir: str):
 
         super().__init__(source, wpstore, download_dir)
         self.wplist = []
@@ -67,7 +67,7 @@ class FileProvider(Provider):
 
         random.shuffle(self.wplist)
 
-    def get_next(self) -> string:
+    def get_next(self) -> str:
         if len(self.wplist) == 0:
             logging.debug("used all wallpapers, reloading")
             self.wpstore.ignore_all_by_sourceid(self.source.sid)
@@ -86,7 +86,7 @@ class FileProvider(Provider):
 
 class ZeroChanProvider(Provider):
 
-    def __init__(self, source: WallpaperSourceModel, wpstore: WallpaperDAO, download_dir: string):
+    def __init__(self, source: WallpaperSourceModel, wpstore: WallpaperDAO, download_dir: str):
         super().__init__(source, wpstore, download_dir)
         self.wplist = []
 
@@ -121,7 +121,7 @@ class ZeroChanProvider(Provider):
 
         random.shuffle(self.wplist)
 
-    def get_next(self) -> string:
+    def get_next(self) -> str:
         if len(self.wplist) == 0:
             logging.debug("used all wallpapers, reloading")
             self.wpstore.ignore_all_by_sourceid(self.source.sid)
@@ -137,25 +137,14 @@ class ZeroChanProvider(Provider):
             r = requests.get(url, headers={'User-agent': 'wpcg test'} )
             json = r.json()
             url = json['full']
-            target = os.path.join(self.download_dir,unquote(url.split('/')[-1]))
-            if not os.path.exists(target):
-                logging.debug("Downloading: %s", url)
-                urllib.request.urlretrieve(url, target)
-                logging.debug("downloaded to: " + target)
-            else:
-                logging.debug("already downloaded")
+            return url
 
         except Exception as e:
             logging.error("Could not get zerochan page %s", url)
             logging.error(str(e))
 
-        if not os.path.isfile(target):
-            return None
 
-        return target
-
-
-def get_providers(sources: List[WallpaperSourceModel], wp_dao: WallpaperDAO, wallpaper_dir: string) \
+def get_providers(sources: List[WallpaperSourceModel], wp_dao: WallpaperDAO, wallpaper_dir: str) \
         -> List[Provider]:
     providers = []
     for source in sources:

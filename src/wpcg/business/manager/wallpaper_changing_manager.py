@@ -57,7 +57,23 @@ class WallpaperChangingManager:
             for prov in self.providers:
                 prov.reload()
 
-    def next_wallpaper(self, progress: Callable[[int]])-> bool:
+    def _download_file(self, url: str, download_dir:str, progress: Callable[[int], None]) -> str:
+        progress(0)
+
+        target = os.path.join(self.download_dir,unquote(url.split('/')[-1]))
+        if not os.path.exists(target):
+            logging.debug("Downloading: %s", url)
+            urllib.request.urlretrieve(url, target)
+            logging.debug("downloaded to: " + target)
+        else:
+            logging.debug("already downloaded")
+        
+        progress(100)
+
+        return target if os.path.exists(target) else None
+
+
+    def next_wallpaper(self, progress: Callable[[int], None])-> bool:
         """
         Switches to the next wallpaper in the list of loaded wallpapers and removes it from the list. if the list is
         empty, set previouly shown wallpapers to ignore and load the wallpapers again.
@@ -69,7 +85,9 @@ class WallpaperChangingManager:
             rand = random.randrange(0, len(self.providers))
             wallpaper = self.providers[rand].get_next()
 
-            # ToDo: proper error handling
+            if wallpaper.startswith('http'):
+                wallpaper = self._download_file(wallpaper, self.download_dir, progress)
+
             if wallpaper is None:
                 return False
 
