@@ -7,5 +7,5 @@ nuitka --standalone `
  --product-name='wpcg' `
  --file-description='wpcg' `
  --file-version='1.0.0' `
- --windows-icon-from-ico=wpcg/icons/icon.ico `
- .\wpcg\wpcg.py
+ --windows-icon-from-ico=src/wpcg/icons/icon.ico `
+ .\src\wpcg\wpcg.py
