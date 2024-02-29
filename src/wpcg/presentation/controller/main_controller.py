@@ -145,6 +145,8 @@ class MainController:
         self.menu.addAction(self.exit_action)
         self.trayicon.setContextMenu(self.menu)
 
+        self._reset_tooltip()
+
         # show it
         self.trayicon.show()
         self.trayicon.setVisible(True)
@@ -165,12 +167,17 @@ class MainController:
             self.previous_thread is not None and self.previous_thread.isRunning() or \
             self.reload_thread is not None and self.reload_thread.isRunning()
 
+    def _reset_tooltip(self):
+        self.trayicon.setToolTip("Click for next wallpaper")
+
     def _start_loading(self):
         self.trayicon.setIcon(self.loading_icon)
+        self.trayicon.setToolTip("Setting wallpaper...")
 
     def _stop_loading(self):
         self.trayicon.setIcon(self.icon)
         self.progress_icon_index = -1
+        self._reset_tooltip()
 
     def _context_next(self):
         """shows next wallpaper."""
@@ -221,6 +228,7 @@ class MainController:
     def _action_progress(self, progress: float):
         p = 0.0 if progress < 0 else progress
         p = 1.0 if p > 1 else p
+        self.trayicon.setToolTip("Downloading image {0}%".format(int(p*100)))
         i = math.floor(p * (len(self.progress_icons)-1))
         icon = self.progress_icons[i]
         if self.progress_icon_index != i:
