@@ -57,13 +57,29 @@ class WallpaperChangingManager:
             for prov in self.providers:
                 prov.reload()
 
-    def _download_file(self, url: str, download_dir:str, progress: Callable[[int], None]) -> str:
+    def _download_file(self, url: str, download_dir:str, progress: Callable[[float], None]) -> str:
         progress(0)
 
         target = os.path.join(self.download_dir,unquote(url.split('/')[-1]))
         if not os.path.exists(target):
             logging.debug("Downloading: %s", url)
-            urllib.request.urlretrieve(url, target)
+            with open(target, "wb") as f:
+                response = requests.get(url, stream=True)
+                total = response.headers.get('content-length')
+                if total is None: # no content length, write whole file
+                    logging.debug("Could not get content length, download all")
+                    f.write(response.content)
+                else:
+                    loaded = 0
+                    total = int(total)
+                    for data in response.iter_content(chunk_size=4096):
+                        logging.debug("Download progress {0}/{1}".format(loaded, total))
+                        loaded += len(data)
+                        f.write(data)
+                        if progress is not None:
+                            percent = loaded/total
+                            progress(percent)
+
             logging.debug("downloaded to: " + target)
         else:
             logging.debug("already downloaded")
@@ -73,7 +89,7 @@ class WallpaperChangingManager:
         return target if os.path.exists(target) else None
 
 
-    def next_wallpaper(self, progress: Callable[[int], None])-> bool:
+    def next_wallpaper(self, progress: Callable[[float], None])-> bool:
         """
         Switches to the next wallpaper in the list of loaded wallpapers and removes it from the list. if the list is
         empty, set previouly shown wallpapers to ignore and load the wallpapers again.

@@ -14,6 +14,7 @@ from data.dao.settings_dao import SettingsDAO
 from presentation.controller.settings_window_controller import SettingsWindowController
 
 from presentation.ui import icon_resources_rc
+import math
 
 class MainController:
     """
@@ -23,7 +24,7 @@ class MainController:
     class ChangeThread (QThread):
         succeeded = Signal(None)
         failed = Signal(None)
-        progress = Signal(int)
+        progress = Signal(float)
 
         def __init__(self, changer: WallpaperChangingManager) -> None:
             super().__init__()
@@ -91,7 +92,7 @@ class MainController:
         # create tray icon
         self.icon = QIcon(u":icons/icons/icon.ico")
         self.loading_icon = QIcon(u":icons/icons/icon_loading.ico")
-        self.progess_icons = [QIcon(u":icons/icons/progress_{}.ico".format(i)) for i in range(1,25)]
+        self.progress_icons = [QIcon(u":icons/icons/progress_{}.ico".format(i)) for i in range(1,25)]
 
         self.trayicon = QSystemTrayIcon()
         self.trayicon.setIcon(self.icon)
@@ -215,8 +216,13 @@ class MainController:
         self.trayicon.showMessage("Failed to set wallpaper", "Failed to set wallpaper, try again...", QSystemTrayIcon.MessageIcon.Critical)
         self._action_completed()
 
-    def _action_progress(self, progress: int):
-        print(progress)
+    def _action_progress(self, progress: float):
+        p = 0.0 if progress < 0 else progress
+        p = 1.0 if p > 1 else p
+        i = math.floor(p * (len(self.progress_icons)-1))
+        icon = self.progress_icons[i]
+        if self.trayicon.icon() is not icon:
+            self.trayicon.setIcon(icon)
 
     def _activated(self, reason):
         """called when the icon is double clicked to change to next wallpaper."""
