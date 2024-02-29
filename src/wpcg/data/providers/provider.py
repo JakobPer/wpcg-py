@@ -22,7 +22,7 @@ class Provider:
         self.wpstore = wpstore
         self.download_dir = download_dir
 
-    def reload(self):
+    def reload(self, was_empty = False):
         pass
 
     def get_next(self) -> str:
@@ -47,7 +47,7 @@ class FileProvider(Provider):
         super().__init__(source, wpstore, download_dir)
         self.wplist = []
 
-    def reload(self):
+    def reload(self, was_empty = False):
         wpdir = self.source.url
 
         if not os.path.isdir(wpdir):
@@ -90,16 +90,20 @@ class ZeroChanProvider(Provider):
         super().__init__(source, wpstore, download_dir)
         self.wplist = []
         self._request_headers = {'User-agent': 'wpcg - wpcg'}
+        self._page = 0
 
-    def reload(self):
+    def reload(self, was_empty = False):
         self.wplist = []
+
+        if was_empty:
+            self._page += 1
 
         split = urlsplit(self.source.url)
         url = urlunsplit((
             split[0],
             split[1],
             split[2],
-            (split[3] if 'json' in split[3] else split[3]+'&json') + '&l=250',
+            (split[3] if 'json' in split[3] else split[3]+'&json') + '&l=250&p={0}'.format(self._page),
             split[4],
         ))
 
