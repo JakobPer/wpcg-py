@@ -89,6 +89,7 @@ class ZeroChanProvider(Provider):
     def __init__(self, source: WallpaperSourceModel, wpstore: WallpaperDAO, download_dir: str):
         super().__init__(source, wpstore, download_dir)
         self.wplist = []
+        self._request_headers = {'User-agent': 'wpcg - wpcg'}
 
     def reload(self):
         self.wplist = []
@@ -105,7 +106,7 @@ class ZeroChanProvider(Provider):
         logging.debug("Parsing zerochan url: %s", url)
         # get zerochan json
         try:
-            r = requests.get(url, headers={'User-agent': 'wpcg test'})
+            r = requests.get(url, headers=self._request_headers)
             json = r.json()
             for elem in json['items']:
                 id = elem['id']
@@ -134,7 +135,7 @@ class ZeroChanProvider(Provider):
         url = "https://zerochan.net/" + str(id) +"?json"
 
         try:
-            r = requests.get(url, headers={'User-agent': 'wpcg test'} )
+            r = requests.get(url, headers=self._request_headers )
             json = r.json()
             url = json['full']
             return url
