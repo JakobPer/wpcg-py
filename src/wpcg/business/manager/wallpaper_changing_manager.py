@@ -95,13 +95,13 @@ class WallpaperChangingManager:
         empty, set previouly shown wallpapers to ignore and load the wallpapers again.
         """
         if len(self.providers) == 0:
-            return
+            return False
 
         with QMutexLocker(_mutex):
             rand = random.randrange(0, len(self.providers))
             wallpaper = self.providers[rand].get_next()
 
-            if wallpaper.startswith('http'):
+            if wallpaper is not None and  wallpaper.startswith('http'):
                 wallpaper = self._download_file(wallpaper, self.download_dir, progress)
 
             if wallpaper is None:

@@ -93,6 +93,7 @@ class MainController:
         self.icon = QIcon(u":icons/icons/icon.ico")
         self.loading_icon = QIcon(u":icons/icons/icon_loading.ico")
         self.progress_icons = [QIcon(u":icons/icons/progress_{}.ico".format(i)) for i in range(1,25)]
+        self.progress_icon_index = -1
 
         self.trayicon = QSystemTrayIcon()
         self.trayicon.setIcon(self.icon)
@@ -169,6 +170,7 @@ class MainController:
 
     def _stop_loading(self):
         self.trayicon.setIcon(self.icon)
+        self.progress_icon_index = -1
 
     def _context_next(self):
         """shows next wallpaper."""
@@ -213,7 +215,7 @@ class MainController:
             self._stop_loading()
 
     def _action_failed(self):
-        self.trayicon.showMessage("Failed to set wallpaper", "Failed to set wallpaper, try again...", QSystemTrayIcon.MessageIcon.Critical)
+        self.trayicon.showMessage("Failed to set wallpaper", "try again...", QSystemTrayIcon.MessageIcon.Critical)
         self._action_completed()
 
     def _action_progress(self, progress: float):
@@ -221,7 +223,8 @@ class MainController:
         p = 1.0 if p > 1 else p
         i = math.floor(p * (len(self.progress_icons)-1))
         icon = self.progress_icons[i]
-        if self.trayicon.icon() is not icon:
+        if self.progress_icon_index != i:
+            self.progress_icon_index = i
             self.trayicon.setIcon(icon)
 
     def _activated(self, reason):
