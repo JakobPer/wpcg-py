@@ -5,9 +5,10 @@ nuitka3 --standalone \
  --plugin-enable=pyside6 \
  --disable-console \
  --output-dir=build \
+ --output-filename='wpcg' \
  --company-name='github.com/JakobPer' \
  --product-name='wpcg' \
  --file-description='wpcg' \
  --file-version='1.0.0' \
  --linux-icon=src/wpcg/icons/linux/1024.png \
- ./src/wpcg/wpcg.py
+ ./src/wpcg/main.py
