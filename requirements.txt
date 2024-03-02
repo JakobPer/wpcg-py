@@ -3,6 +3,7 @@ cachetools==5.3.2
 certifi==2022.12.7
 charset-normalizer==2.1.1
 future==0.18.2
+hatch==1.9.3
 idna==3.4
 Nuitka==2.0.3
 numpy==1.26.4

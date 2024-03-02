@@ -5,7 +5,7 @@
 
 from PySide6.QtWidgets import QDialog
 
-from presentation.ui import ui_webDialog
+from wpcg.presentation.ui import ui_webDialog
 
 
 class WebDialogController(QDialog, ui_webDialog.Ui_Dialog):

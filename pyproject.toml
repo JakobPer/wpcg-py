@@ -36,7 +36,10 @@ dependencies = [
 [project.urls]
 Documentation = "https://github.com/JakobPer/wpcg-py#readme"
 Issues = "https://github.com/JakobPer/wpcg-py/issues"
-Source = "https://github.com/JakobPer/wpcg-py/issues"
+Source = "https://github.com/JakobPer/wpcg-py"
+
+[project.scripts]
+wpcg = "wpcg.main:run"
 
 [tool.hatch.version]
 path = "src/wpcg/__about__.py"

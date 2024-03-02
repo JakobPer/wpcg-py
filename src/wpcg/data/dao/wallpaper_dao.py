@@ -7,8 +7,9 @@ import sqlite3
 import string
 from os import path
 
-import utils.utils as utils
-from data.model.wallpaper_source_model import WallpaperSourceModel
+import wpcg.utils.utils as utils
+from wpcg.data.model.wallpaper_source_model import WallpaperSourceModel
+
 from PySide6 import QtCore
 
 _mutex = QtCore.QMutex()

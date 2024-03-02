@@ -7,11 +7,12 @@ import urllib.request
 
 from urllib3.util.url import *
 
-from business.manager.wallpaper_changing_manager import *
-from data.dao.wallpaper_dao import WallpaperDAO
+from wpcg.business.manager.wallpaper_changing_manager import *
+from wpcg.data.dao.wallpaper_dao import WallpaperDAO
+from wpcg.data.model.wallpaper_source_model import WallpaperSourceModel
+
 from typing import List
 
-from data.model.wallpaper_source_model import WallpaperSourceModel
 import requests
 
 

@@ -11,19 +11,19 @@ import string
 import urllib
 from subprocess import call
 from urllib.parse import *
-from data.providers import provider
 from pathlib import Path
 from typing import Callable
-
 import requests
 
-# only import on windows
-from data.model.settings_model import SettingsModel
-from data.dao.wallpaper_dao import WallpaperDAO
-from utils import utils
-from utils.imageutils import ImageUtils
+from wpcg.data.providers import provider
+from wpcg.data.model.settings_model import SettingsModel
+from wpcg.data.dao.wallpaper_dao import WallpaperDAO
+from wpcg.utils import utils
+from wpcg.utils.imageutils import ImageUtils
+
 from PySide6.QtCore import QMutex, QMutexLocker, QRunnable, QThreadPool, QThread, Signal
 
+# only import on windows
 if platform.system() == "Windows":
     import ctypes
 

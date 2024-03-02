@@ -8,9 +8,8 @@
             "name": "WPCG",
             "type": "debugpy",
             "request": "launch",
-            "program": "wpcg.py",
+            "program": "src/wpcg/main.py",
             "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}/src/wpcg",
             "justMyCode": true
         },
         {

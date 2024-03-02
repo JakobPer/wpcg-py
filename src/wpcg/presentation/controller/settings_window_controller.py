@@ -8,11 +8,11 @@ import logging
 from PySide6.QtCore import QTime, Qt
 from PySide6.QtWidgets import QMainWindow, QListWidgetItem, QFileDialog, QDialog, QMessageBox
 
-from data.dao.settings_dao import SettingsDAO
-from data.dao.wallpaper_dao import WallpaperDAO
-from data.model.wallpaper_source_model import WallpaperSourceModel
-from presentation.controller.web_dialog_controller import WebDialogController
-from presentation.ui.ui_settings import Ui_SettingsWindow
+from wpcg.data.dao.settings_dao import SettingsDAO
+from wpcg.data.dao.wallpaper_dao import WallpaperDAO
+from wpcg.data.model.wallpaper_source_model import WallpaperSourceModel
+from wpcg.presentation.controller.web_dialog_controller import WebDialogController
+from wpcg.presentation.ui.ui_settings import Ui_SettingsWindow
 
 import platform
 import os

@@ -14,9 +14,8 @@ import PySide6.QtCore as QtCore
 # import QtSvg cause otherwise Svg resources don't work on Win11 for some reason... 
 from PySide6 import QtSvg, QtXml # DO NOT REMOVE
 
-from presentation.controller import main_controller
-from utils import utils
-
+from wpcg.presentation.controller import main_controller
+from wpcg.utils import utils
 
 class AppContext:  # 1. Subclass ApplicationContext
 
@@ -30,8 +29,10 @@ class AppContext:  # 1. Subclass ApplicationContext
         self.w = main_controller.MainController(app)
         return app.exec() # 3. End run() with this line
 
-
-if __name__ == '__main__':
+def run():
     appctxt = AppContext()  # 4. Instantiate the subclass
     exit_code = appctxt.run()  # 5. Invoke run()
     sys.exit(exit_code)
+
+if __name__ == '__main__':
+    run()

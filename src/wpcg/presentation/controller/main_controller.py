@@ -9,11 +9,11 @@ from PySide6.QtCore import QThread, QTimer, QEvent, Qt, QRunnable,QThreadPool, S
 from PySide6.QtGui import QIcon, QAction, QPixmap
 from PySide6.QtWidgets import QSystemTrayIcon, QMenu, QApplication
 
-from business.manager.wallpaper_changing_manager import WallpaperChangingManager
-from data.dao.settings_dao import SettingsDAO
-from presentation.controller.settings_window_controller import SettingsWindowController
+from wpcg.business.manager.wallpaper_changing_manager import WallpaperChangingManager
+from wpcg.data.dao.settings_dao import SettingsDAO
+from wpcg.presentation.controller.settings_window_controller import SettingsWindowController
+from wpcg.presentation.ui import icon_resources_rc
 
-from presentation.ui import icon_resources_rc
 import math
 
 class MainController:

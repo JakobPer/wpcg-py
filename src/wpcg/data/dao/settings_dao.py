@@ -6,10 +6,11 @@
 import os
 import json
 
-import utils.utils as utils
-
 from PySide6.QtCore import QMutex, QMutexLocker
-from ..model.settings_model import SettingsModel
+
+from wpcg.data.model.settings_model import SettingsModel
+import wpcg.utils.utils as utils
+
 
 _mutex = QMutex()
 
