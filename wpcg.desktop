@@ -1,0 +1,14 @@
+[Desktop Entry]
+Comment=A simple random wallpaper changer
+Exec=wpcg
+GenericName=A simple random wallpaper changer
+Icon=wpcg
+MimeType=
+Name=wpcg
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-KDE-SubstituteUID=false
+X-KDE-Username=
