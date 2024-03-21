@@ -12,7 +12,7 @@ import urllib
 from subprocess import call
 from urllib.parse import *
 from pathlib import Path
-from typing import Callable
+from typing import Callable, List, Tuple
 import requests
 
 from wpcg.data.providers import provider
@@ -21,13 +21,36 @@ from wpcg.data.dao.wallpaper_dao import WallpaperDAO
 from wpcg.utils import utils
 from wpcg.utils.imageutils import ImageUtils
 
-from PySide6.QtCore import QMutex, QMutexLocker, QRunnable, QThreadPool, QThread, Signal
+from PySide6.QtCore import QMutex, QMutexLocker, QObject, QRunnable, QThreadPool, QThread, Signal
 
 # only import on windows
 if platform.system() == "Windows":
     import ctypes
 
 _mutex = QMutex()
+
+class DownloadThread(QThread):
+
+    progress = Signal(float)
+
+    def __init__(self,provider_id: int, url: str, download_dir:str) -> None:
+        super().__init__()
+        self.url = url
+        self.provider_id = provider_id
+        self.download_dir = download_dir
+        self.downloaded_file:str = None
+
+    def run(self) -> None:
+        if self.url.startswith('http'):
+            try:
+                logging.debug("Downloading {0}".format(self.url))
+                self.downloaded_file = utils.download_file(self.url, self.download_dir, self.progress.emit)
+                logging.debug("Downloading {0} finished".format(self.url))
+            except Exception as e:
+                logging.error("Failed to download {0}".format(self.url))
+                logging.error(e)
+        else: # It's a local file (ToDo make better handling than creating a thread for local files)
+            self.downloaded_file = self.url
 
 
 class WallpaperChangingManager:
@@ -43,6 +66,7 @@ class WallpaperChangingManager:
         self.download_dir = utils.get_download_dir()
         self.prettified_dir = utils.get_prettified_dir()
         self.providers = []
+        self.download_queue : List[DownloadThread] = []
         self.reload_wallpaper_list()
 
     def reload_wallpaper_list(self):
@@ -56,38 +80,22 @@ class WallpaperChangingManager:
             self.providers = provider.get_providers(wpsources, self.wpstore, self.download_dir)
             for prov in self.providers:
                 prov.reload()
+            self.download_queue.clear()
+            self._predownload()
 
-    def _download_file(self, url: str, download_dir:str, progress: Callable[[float], None]) -> str:
-        progress(0)
+    def _predownload(self) -> None:
+        if len(self.download_queue) < self.settings.predownload_count:
+            nr = self.settings.predownload_count - len(self.download_queue)
+            for _ in range(nr):
+                (pid, wallpaper) = self._get_next_random()
+                if wallpaper is not None:
+                    thread = DownloadThread(pid, wallpaper, self.download_dir)
+                    thread.start()
+                    self.download_queue.append(thread)
 
-        target = os.path.join(self.download_dir,unquote(url.split('/')[-1]))
-        if not os.path.exists(target):
-            logging.debug("Downloading: %s", url)
-            with open(target, "wb") as f:
-                response = requests.get(url, stream=True)
-                total = response.headers.get('content-length')
-                if total is None: # no content length, write whole file
-                    logging.debug("Could not get content length, download all")
-                    f.write(response.content)
-                else:
-                    loaded = 0
-                    total = int(total)
-                    for data in response.iter_content(chunk_size=4096):
-                        logging.debug("Download progress {0}/{1}".format(loaded, total))
-                        loaded += len(data)
-                        f.write(data)
-                        if progress is not None:
-                            percent = loaded/total
-                            progress(percent)
-
-            logging.debug("downloaded to: " + target)
-        else:
-            logging.debug("already downloaded")
-        
-        progress(100)
-
-        return target if os.path.exists(target) else None
-
+    def _get_next_random(self) -> tuple[int, str]:
+            rand = random.randrange(0, len(self.providers))
+            return (rand, self.providers[rand].get_next())
 
     def next_wallpaper(self, progress: Callable[[float], None])-> bool:
         """
@@ -98,18 +106,27 @@ class WallpaperChangingManager:
             return False
 
         with QMutexLocker(_mutex):
-            rand = random.randrange(0, len(self.providers))
-            wallpaper = self.providers[rand].get_next()
+            if len(self.download_queue) == 0:
+                self._predownload()
 
-            if wallpaper is not None and  wallpaper.startswith('http'):
-                wallpaper = self._download_file(wallpaper, self.download_dir, progress)
+            thread = self.download_queue.pop(0)
+
+            # wait for thread if running
+            if thread.isRunning():
+                logging.debug("waiting for download to finish...")
+                thread.progress.connect(progress)
+                thread.wait()
+
+            self._predownload() # fill queue again immediatelly so download starts as early as possible
+
+            wallpaper = thread.downloaded_file
 
             if wallpaper is None:
                 return False
 
             self.prev_counter = 1
             self._set_wallpaper(wallpaper)
-            self.wpstore.add_history_entry(wallpaper, self.providers[rand].source.sid)
+            self.wpstore.add_history_entry(wallpaper, self.providers[thread.provider_id].source.sid)
 
             logging.debug("set wallpaper to: %s" % wallpaper)
 

@@ -12,7 +12,8 @@ class SettingsModel:
                 blur_background=True,
                 blur_amount=10,
                 blend_edges=True,
-                blend_ratio=0.02):
+                blend_ratio=0.02,
+                predownload_count=3):
 
         self.wallpaper_width = wallpaper_width
         self.wallpaper_height = wallpaper_height
@@ -24,3 +25,4 @@ class SettingsModel:
         self.blur_amount = blur_amount
         self.blend_edges = blend_edges
         self.blend_ratio = blend_ratio
+        self.predownload_count = predownload_count

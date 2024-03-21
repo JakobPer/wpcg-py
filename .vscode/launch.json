@@ -8,7 +8,7 @@
             "name": "WPCG",
             "type": "debugpy",
             "request": "launch",
-            "program": "src/wpcg/main.py",
+            "program": "src/main.py",
             "console": "integratedTerminal",
             "justMyCode": true
         },
