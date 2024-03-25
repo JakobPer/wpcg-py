@@ -9,4 +9,4 @@ nuitka --standalone `
  --file-description='wpcg' `
  --file-version='1.0.0' `
  --windows-icon-from-ico=src/wpcg/icons/icon.ico `
- .\src\wpcg\main.py
+ .\src\main.py

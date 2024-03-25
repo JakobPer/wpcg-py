@@ -67,7 +67,6 @@ class WallpaperChangingManager:
         self.prettified_dir = utils.get_prettified_dir()
         self.providers = []
         self.download_queue : List[DownloadThread] = []
-        self.reload_wallpaper_list()
 
     def reload_wallpaper_list(self):
         """
@@ -85,7 +84,7 @@ class WallpaperChangingManager:
 
     def _predownload(self) -> None:
         if len(self.download_queue) < self.settings.predownload_count:
-            nr = self.settings.predownload_count - len(self.download_queue)
+            nr = max(self.settings.predownload_count, 1) - len(self.download_queue)
             for _ in range(nr):
                 (pid, wallpaper) = self._get_next_random()
                 if wallpaper is not None:

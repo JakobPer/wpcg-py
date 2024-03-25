@@ -135,6 +135,7 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         time = self.teInterval.time()
         interval = time.msecsSinceStartOfDay()
         self.settings.change_interval = interval
+        self.settings.predownload_count = self.sbPredownloadCount.value()
         self.settings.prettification_enabled = self.cb_enable_prettification.isChecked()
         self.settings.repeat_background = self.cb_repeat_backround.isChecked()
         self.settings.blur_background = self.cb_blur_background.isChecked()
@@ -245,6 +246,7 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         time = QTime(0, 0)
         time = time.addMSecs(self.settings.change_interval)
         self.teInterval.setTime(time)
+        self.sbPredownloadCount.setValue(self.settings.predownload_count)
 
         self.cb_enable_prettification.setChecked(self.settings.prettification_enabled)
         self.cb_repeat_backround.setChecked(self.settings.repeat_background)
@@ -256,6 +258,7 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         self.sb_height.setValue(self.settings.wallpaper_height)
         self.dsb_amount.setValue(self.settings.blur_amount)
         self.dsb_blend_ratio.setValue(self.settings.blend_ratio)
+
 
         self.cb_autostart.setChecked(self.is_windows_autostart_enabled())
 

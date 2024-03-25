@@ -74,7 +74,6 @@ class MainController:
 
         QThreadPool.globalInstance().setMaxThreadCount(4)
 
-        self.wplist = []
         # timer that changes the wallpaper
         self.timer = QTimer()
 
@@ -150,6 +149,8 @@ class MainController:
         # show it
         self.trayicon.show()
         self.trayicon.setVisible(True)
+
+        self._reload()
 
         # start the timer
         self.timer.timeout.connect(self._context_next)
@@ -256,11 +257,16 @@ class MainController:
         self.settings = self.settings_dao.load()
         self.changer.settings = self.settings
 
+        self._reload()
+        self.timer.stop()
+        self.timer.start(self.settings.change_interval)
+
+    def _reload(self):
+        self._start_loading()
         self.reload_thread = MainController.ReloadWallpaperThread(self.changer)
         self.reload_thread.succeeded.connect(self._action_completed)
         self._start_thread(self.reload_thread)
-        self.timer.stop()
-        self.timer.start(self.settings.change_interval)
+
 
     def _start_thread(self, thread: QThread):
         #QThreadPool.globalInstance().start(thread)

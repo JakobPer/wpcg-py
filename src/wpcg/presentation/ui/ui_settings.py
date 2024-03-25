@@ -157,12 +157,48 @@ class Ui_SettingsWindow(object):
 
         self.teInterval = QTimeEdit(self.tab_general)
         self.teInterval.setObjectName(u"teInterval")
-        self.teInterval.setMinimumSize(QSize(60, 0))
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.teInterval.sizePolicy().hasHeightForWidth())
+        self.teInterval.setSizePolicy(sizePolicy3)
+        self.teInterval.setMinimumSize(QSize(100, 0))
 
         self.horizontalLayout.addWidget(self.teInterval)
 
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer)
+
 
         self.verticalLayout_9.addLayout(self.horizontalLayout)
+
+        self.horizontalLayout_5 = QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.label_3 = QLabel(self.tab_general)
+        self.label_3.setObjectName(u"label_3")
+        sizePolicy1.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
+        self.label_3.setSizePolicy(sizePolicy1)
+
+        self.horizontalLayout_5.addWidget(self.label_3)
+
+        self.sbPredownloadCount = QSpinBox(self.tab_general)
+        self.sbPredownloadCount.setObjectName(u"sbPredownloadCount")
+        sizePolicy3.setHeightForWidth(self.sbPredownloadCount.sizePolicy().hasHeightForWidth())
+        self.sbPredownloadCount.setSizePolicy(sizePolicy3)
+        self.sbPredownloadCount.setMinimumSize(QSize(100, 0))
+        self.sbPredownloadCount.setMinimum(1)
+        self.sbPredownloadCount.setMaximum(10)
+        self.sbPredownloadCount.setValue(3)
+
+        self.horizontalLayout_5.addWidget(self.sbPredownloadCount)
+
+        self.horizontalSpacer_7 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_5.addItem(self.horizontalSpacer_7)
+
+
+        self.verticalLayout_9.addLayout(self.horizontalLayout_5)
 
         self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
@@ -223,11 +259,11 @@ class Ui_SettingsWindow(object):
 
         self.sb_width = QSpinBox(self.groupBox_3)
         self.sb_width.setObjectName(u"sb_width")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.sb_width.sizePolicy().hasHeightForWidth())
-        self.sb_width.setSizePolicy(sizePolicy3)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.sb_width.sizePolicy().hasHeightForWidth())
+        self.sb_width.setSizePolicy(sizePolicy4)
         self.sb_width.setMinimumSize(QSize(80, 0))
         self.sb_width.setMaximum(20000)
         self.sb_width.setValue(1920)
@@ -236,8 +272,8 @@ class Ui_SettingsWindow(object):
 
         self.sb_height = QSpinBox(self.groupBox_3)
         self.sb_height.setObjectName(u"sb_height")
-        sizePolicy3.setHeightForWidth(self.sb_height.sizePolicy().hasHeightForWidth())
-        self.sb_height.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.sb_height.sizePolicy().hasHeightForWidth())
+        self.sb_height.setSizePolicy(sizePolicy4)
         self.sb_height.setMinimumSize(QSize(80, 0))
         self.sb_height.setMaximum(20000)
         self.sb_height.setValue(1080)
@@ -348,11 +384,11 @@ class Ui_SettingsWindow(object):
         self.gridLayout.setObjectName(u"gridLayout")
         self.btnOk = QPushButton(self.centralwidget)
         self.btnOk.setObjectName(u"btnOk")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.btnOk.sizePolicy().hasHeightForWidth())
-        self.btnOk.setSizePolicy(sizePolicy4)
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.btnOk.sizePolicy().hasHeightForWidth())
+        self.btnOk.setSizePolicy(sizePolicy5)
 
         self.gridLayout.addWidget(self.btnOk, 0, 3, 1, 1)
 
@@ -383,6 +419,7 @@ class Ui_SettingsWindow(object):
         self.btnWeb.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_sources), QCoreApplication.translate("SettingsWindow", u"Sources", None))
         self.label_2.setText(QCoreApplication.translate("SettingsWindow", u"Interval (hh:mm):", None))
+        self.label_3.setText(QCoreApplication.translate("SettingsWindow", u"Nr. pre-downloaded images:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_general), QCoreApplication.translate("SettingsWindow", u"General", None))
 #if QT_CONFIG(tooltip)
         self.cb_enable_prettification.setToolTip(QCoreApplication.translate("SettingsWindow", u"<html><head/><body><p>If prettification is\n"
