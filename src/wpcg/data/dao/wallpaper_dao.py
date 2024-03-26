@@ -9,6 +9,7 @@ from os import path
 
 import wpcg.utils.utils as utils
 from wpcg.data.model.wallpaper_source_model import WallpaperSourceModel
+from wpcg.data.model.settings_model import AppSettingsModel
 
 from PySide6 import QtCore
 
@@ -20,11 +21,15 @@ class WallpaperDAO:
     Class used for persisting wallpaper relevant data like the history and sources.
     """
 
-    def __init__(self):
+    def __init__(self, appsettings: AppSettingsModel):
         """
         Initializes the WPStore. Creates the database tables if they do not already exist.
         """
-        self._database_url = path.join(utils.get_app_dir(), "wpstore.db")
+        self.set_appsettings(appsettings)
+    
+    def set_appsettings(self, appsettings: AppSettingsModel):
+        self._appsettings = appsettings
+        self._database_url = path.join(appsettings.base_dir, "wpstore.db")
         with QtCore.QMutexLocker(_mutex):
             conn = self.__connect()
             # create history table if it does not exist already

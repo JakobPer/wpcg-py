@@ -8,7 +8,7 @@ import logging
 from PySide6.QtCore import QTime, Qt
 from PySide6.QtWidgets import QMainWindow, QListWidgetItem, QFileDialog, QDialog, QMessageBox
 
-from wpcg.data.dao.settings_dao import SettingsDAO
+from wpcg.data.dao.settings_dao import SettingsDAO, AppSettingsModel
 from wpcg.data.dao.wallpaper_dao import WallpaperDAO
 from wpcg.data.model.wallpaper_source_model import WallpaperSourceModel
 from wpcg.presentation.controller.web_dialog_controller import WebDialogController
@@ -89,6 +89,14 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         self.cb_blur_background.stateChanged.connect(self.cb_blur_background_clicked)
         self.cb_blend_edges.stateChanged.connect(self.cb_blend_edges_clicked)
 
+        self.leAppDir.textChanged.connect(self.app_dir_changed)
+        self.leDownloadDir.textChanged.connect(self.download_dir_changed)
+        self.lePrettifyDir.textChanged.connect(self.prettify_dir_changed)
+
+        self.btPickAppDir.pressed.connect(self.set_app_dir)
+        self.btPickDownloadDir.pressed.connect(self.set_download_dir)
+        self.btPickPrettifyDir.pressed.connect(self.set_prettify_dir)
+
         # windows tab
         windows_tab_index = self.tabWidget.indexOf(self.tab_windows)
         self.tabWidget.setTabVisible(windows_tab_index, platform.system() == "Windows")
@@ -145,7 +153,13 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         self.settings.blur_amount = self.dsb_amount.value()
         self.settings.blend_ratio = self.dsb_blend_ratio.value()
         self.settings.prettification_threshold = self.dsb_threshold.value()
-        self.settings_dao.save(self.settings)
+
+        self.appsettings.base_dir = self.leAppDir.text()
+        self.appsettings.download_dir = self.leDownloadDir.text()
+        self.appsettings.prettify_dir = self.lePrettifyDir.text()
+
+        self.settings_dao.save_app_settings(self.appsettings)
+        self.settings_dao.save_shared(self.settings, self.appsettings)
 
         logging.debug("new interval: %d", interval)
 
@@ -235,7 +249,8 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         Reloads the config and sets the ui values.
         """
 
-        self.settings = self.settings_dao.load()
+        self.appsettings = self.settings_dao.load_app_settings()
+        self.settings = self.settings_dao.load_shared(self.appsettings)
 
         # reload wallpaper list
         self.lvSources.clear()
@@ -247,6 +262,9 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
         time = time.addMSecs(self.settings.change_interval)
         self.teInterval.setTime(time)
         self.sbPredownloadCount.setValue(self.settings.predownload_count)
+        self.leAppDir.setText(self.appsettings.base_dir)
+        self.leDownloadDir.setText(self.appsettings.download_dir)
+        self.lePrettifyDir.setText(self.appsettings.prettify_dir)
 
         self.cb_enable_prettification.setChecked(self.settings.prettification_enabled)
         self.cb_repeat_backround.setChecked(self.settings.repeat_background)
@@ -294,4 +312,47 @@ class SettingsWindowController(QMainWindow, Ui_SettingsWindow):
 
     def is_windows_autostart_enabled(self):
         return False
+
+    def app_dir_changed(self):
+        dir = self.leAppDir.text()
+        if not os.path.exists(dir):
+            self.show_error_message("App directory could not be found!")
+            self.leAppDir.setText(self.appsettings.base_dir)
+
+    def download_dir_changed(self):
+        dir = self.leDownloadDir.text()
+        if not os.path.exists(dir):
+            self.show_error_message("Download directory could not be found!")
+            self.leDownloadDir.setText(self.appsettings.download_dir)
+
+    def prettify_dir_changed(self):
+        dir = self.lePrettifyDir.text()
+        if not os.path.exists(dir):
+            self.show_error_message("Prettify directory could not be found!")
+            self.lePrettifyDir.setText(self.appsettings.prettify_dir)
+
+    def set_app_dir(self):
+        folder = QFileDialog.getExistingDirectory(parent=self, caption="Select wpcg main directory")
+        if folder == "":
+            return
+        self.leAppDir.setText(folder)
+
+        answer = QMessageBox.question(self, "Update other directories?", "Also update download and prettify directory to be in this directory?", QMessageBox.StandardButton.No, QMessageBox.StandardButton.Yes)
+
+        if answer == QMessageBox.StandardButton.Yes:
+            tmp = AppSettingsModel(folder)
+            self.leDownloadDir.setText(tmp.download_dir)
+            self.lePrettifyDir.setText(tmp.prettify_dir)
+
+    def set_download_dir(self):
+        folder = QFileDialog.getExistingDirectory(parent=self, caption="Select wallpaper download directory")
+        if folder == "":
+            return
+        self.leDownloadDir.setText(folder)
+
+    def set_prettify_dir(self):
+        folder = QFileDialog.getExistingDirectory(parent=self, caption="Select where prettified wallpapers stored")
+        if folder == "":
+            return
+        self.lePrettifyDir.setText(folder)
 

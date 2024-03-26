@@ -11,4 +11,4 @@ nuitka3 --standalone \
  --file-description='wpcg' \
  --file-version='1.0.0' \
  --linux-icon=src/wpcg/icons/linux/1024.png \
- ./src/wpcg/main.py
+ ./src/main.py

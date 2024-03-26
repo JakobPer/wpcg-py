@@ -70,7 +70,8 @@ class MainController:
 
         self.app = app
         self.settings_dao = SettingsDAO()
-        self.settings = self.settings_dao.load()
+        self.appsettings = self.settings_dao.load_app_settings()
+        self.settings = self.settings_dao.load_shared(self.appsettings)
 
         QThreadPool.globalInstance().setMaxThreadCount(4)
 
@@ -80,7 +81,7 @@ class MainController:
         logging.debug("using interval of %d ms", self.settings.change_interval)
 
         # create the changer
-        self.changer = WallpaperChangingManager(self.settings)
+        self.changer = WallpaperChangingManager(self.settings, self.appsettings)
         self.next_thread: MainController.NextWallpaperThread = None
         self.previous_thread: MainController.PreviousWallpaperThread = None
         self.reload_thread: MainController.ReloadWallpaperThread = None
@@ -254,7 +255,9 @@ class MainController:
     def _settings_saved(self):
         """called after the settings are saved. Reloads the wallpapers and restarts the timer."""
         logging.debug("Settings saved")
-        self.settings = self.settings_dao.load()
+        self.appsettings = self.settings_dao.load_app_settings()
+        self.settings = self.settings_dao.load_shared(self.appsettings)
+        self.changer.set_appsettings(self.appsettings)
         self.changer.settings = self.settings
 
         self._reload()

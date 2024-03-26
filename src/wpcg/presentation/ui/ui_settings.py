@@ -17,16 +17,16 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QDoubleSpinBox, QGridLayout,
     QGroupBox, QHBoxLayout, QLabel, QLayout,
-    QListWidget, QListWidgetItem, QMainWindow, QPushButton,
-    QSizePolicy, QSpacerItem, QSpinBox, QTabWidget,
-    QTimeEdit, QVBoxLayout, QWidget)
+    QLineEdit, QListWidget, QListWidgetItem, QMainWindow,
+    QPushButton, QSizePolicy, QSpacerItem, QSpinBox,
+    QTabWidget, QTimeEdit, QVBoxLayout, QWidget)
 from . import icon_resources_rc
 
 class Ui_SettingsWindow(object):
     def setupUi(self, SettingsWindow):
         if not SettingsWindow.objectName():
             SettingsWindow.setObjectName(u"SettingsWindow")
-        SettingsWindow.resize(752, 602)
+        SettingsWindow.resize(794, 602)
         icon = QIcon()
         icon.addFile(u":/icons/icons/icon.ico", QSize(), QIcon.Normal, QIcon.On)
         SettingsWindow.setWindowIcon(icon)
@@ -139,12 +139,35 @@ class Ui_SettingsWindow(object):
         sizePolicy1.setHeightForWidth(self.tab_general.sizePolicy().hasHeightForWidth())
         self.tab_general.setSizePolicy(sizePolicy1)
         self.tab_general.setLayoutDirection(Qt.LeftToRight)
-        self.verticalLayout_9 = QVBoxLayout(self.tab_general)
-        self.verticalLayout_9.setObjectName(u"verticalLayout_9")
-        self.verticalLayout_9.setSizeConstraint(QLayout.SetDefaultConstraint)
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.horizontalLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
+        self.gridLayout_3 = QGridLayout(self.tab_general)
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.gridLayout_3.setSizeConstraint(QLayout.SetDefaultConstraint)
+        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_3.addItem(self.verticalSpacer_4, 5, 0, 1, 1)
+
+        self.label_9 = QLabel(self.tab_general)
+        self.label_9.setObjectName(u"label_9")
+
+        self.gridLayout_3.addWidget(self.label_9, 3, 0, 1, 1)
+
+        self.label_10 = QLabel(self.tab_general)
+        self.label_10.setObjectName(u"label_10")
+
+        self.gridLayout_3.addWidget(self.label_10, 2, 0, 1, 1)
+
+        self.leDownloadDir = QLineEdit(self.tab_general)
+        self.leDownloadDir.setObjectName(u"leDownloadDir")
+
+        self.gridLayout_3.addWidget(self.leDownloadDir, 3, 2, 1, 1)
+
+        self.label_3 = QLabel(self.tab_general)
+        self.label_3.setObjectName(u"label_3")
+        sizePolicy1.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
+        self.label_3.setSizePolicy(sizePolicy1)
+
+        self.gridLayout_3.addWidget(self.label_3, 1, 0, 1, 1)
+
         self.label_2 = QLabel(self.tab_general)
         self.label_2.setObjectName(u"label_2")
         sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
@@ -153,7 +176,7 @@ class Ui_SettingsWindow(object):
         sizePolicy2.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
         self.label_2.setSizePolicy(sizePolicy2)
 
-        self.horizontalLayout.addWidget(self.label_2)
+        self.gridLayout_3.addWidget(self.label_2, 0, 0, 1, 1)
 
         self.teInterval = QTimeEdit(self.tab_general)
         self.teInterval.setObjectName(u"teInterval")
@@ -164,23 +187,7 @@ class Ui_SettingsWindow(object):
         self.teInterval.setSizePolicy(sizePolicy3)
         self.teInterval.setMinimumSize(QSize(100, 0))
 
-        self.horizontalLayout.addWidget(self.teInterval)
-
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout.addItem(self.horizontalSpacer)
-
-
-        self.verticalLayout_9.addLayout(self.horizontalLayout)
-
-        self.horizontalLayout_5 = QHBoxLayout()
-        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.label_3 = QLabel(self.tab_general)
-        self.label_3.setObjectName(u"label_3")
-        sizePolicy1.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
-        self.label_3.setSizePolicy(sizePolicy1)
-
-        self.horizontalLayout_5.addWidget(self.label_3)
+        self.gridLayout_3.addWidget(self.teInterval, 0, 2, 1, 2)
 
         self.sbPredownloadCount = QSpinBox(self.tab_general)
         self.sbPredownloadCount.setObjectName(u"sbPredownloadCount")
@@ -191,18 +198,40 @@ class Ui_SettingsWindow(object):
         self.sbPredownloadCount.setMaximum(10)
         self.sbPredownloadCount.setValue(3)
 
-        self.horizontalLayout_5.addWidget(self.sbPredownloadCount)
+        self.gridLayout_3.addWidget(self.sbPredownloadCount, 1, 2, 1, 2)
 
-        self.horizontalSpacer_7 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.label_11 = QLabel(self.tab_general)
+        self.label_11.setObjectName(u"label_11")
 
-        self.horizontalLayout_5.addItem(self.horizontalSpacer_7)
+        self.gridLayout_3.addWidget(self.label_11, 4, 0, 1, 1)
 
+        self.leAppDir = QLineEdit(self.tab_general)
+        self.leAppDir.setObjectName(u"leAppDir")
 
-        self.verticalLayout_9.addLayout(self.horizontalLayout_5)
+        self.gridLayout_3.addWidget(self.leAppDir, 2, 2, 1, 1)
 
-        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.lePrettifyDir = QLineEdit(self.tab_general)
+        self.lePrettifyDir.setObjectName(u"lePrettifyDir")
 
-        self.verticalLayout_9.addItem(self.verticalSpacer_4)
+        self.gridLayout_3.addWidget(self.lePrettifyDir, 4, 2, 1, 1)
+
+        self.btPickDownloadDir = QPushButton(self.tab_general)
+        self.btPickDownloadDir.setObjectName(u"btPickDownloadDir")
+        self.btPickDownloadDir.setMinimumSize(QSize(20, 0))
+
+        self.gridLayout_3.addWidget(self.btPickDownloadDir, 3, 3, 1, 1)
+
+        self.btPickAppDir = QPushButton(self.tab_general)
+        self.btPickAppDir.setObjectName(u"btPickAppDir")
+        self.btPickAppDir.setMinimumSize(QSize(20, 0))
+
+        self.gridLayout_3.addWidget(self.btPickAppDir, 2, 3, 1, 1)
+
+        self.btPickPrettifyDir = QPushButton(self.tab_general)
+        self.btPickPrettifyDir.setObjectName(u"btPickPrettifyDir")
+        self.btPickPrettifyDir.setMinimumSize(QSize(20, 0))
+
+        self.gridLayout_3.addWidget(self.btPickPrettifyDir, 4, 3, 1, 1)
 
         icon6 = QIcon(QIcon.fromTheme(u"settings-configure"))
         self.tabWidget.addTab(self.tab_general, icon6, "")
@@ -403,7 +432,7 @@ class Ui_SettingsWindow(object):
 
         self.retranslateUi(SettingsWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         self.btnOk.setDefault(True)
 
 
@@ -418,8 +447,14 @@ class Ui_SettingsWindow(object):
         self.btEditSource.setText("")
         self.btnWeb.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_sources), QCoreApplication.translate("SettingsWindow", u"Sources", None))
-        self.label_2.setText(QCoreApplication.translate("SettingsWindow", u"Interval (hh:mm):", None))
+        self.label_9.setText(QCoreApplication.translate("SettingsWindow", u"Download directory:", None))
+        self.label_10.setText(QCoreApplication.translate("SettingsWindow", u"App directory:", None))
         self.label_3.setText(QCoreApplication.translate("SettingsWindow", u"Nr. pre-downloaded images:", None))
+        self.label_2.setText(QCoreApplication.translate("SettingsWindow", u"Interval (hh:mm):", None))
+        self.label_11.setText(QCoreApplication.translate("SettingsWindow", u"Prettify directory:", None))
+        self.btPickDownloadDir.setText(QCoreApplication.translate("SettingsWindow", u"pick", None))
+        self.btPickAppDir.setText(QCoreApplication.translate("SettingsWindow", u"pick", None))
+        self.btPickPrettifyDir.setText(QCoreApplication.translate("SettingsWindow", u"pick", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_general), QCoreApplication.translate("SettingsWindow", u"General", None))
 #if QT_CONFIG(tooltip)
         self.cb_enable_prettification.setToolTip(QCoreApplication.translate("SettingsWindow", u"<html><head/><body><p>If prettification is\n"

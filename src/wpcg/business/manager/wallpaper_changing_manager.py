@@ -16,7 +16,7 @@ from typing import Callable, List, Tuple
 import requests
 
 from wpcg.data.providers import provider
-from wpcg.data.model.settings_model import SettingsModel
+from wpcg.data.model.settings_model import SharedSettingsModel, AppSettingsModel
 from wpcg.data.dao.wallpaper_dao import WallpaperDAO
 from wpcg.utils import utils
 from wpcg.utils.imageutils import ImageUtils
@@ -58,15 +58,18 @@ class WallpaperChangingManager:
     Handles loading, managing, and switching of wallpapers.
     """
 
-    def __init__(self, settings: SettingsModel):
+    def __init__(self, settings: SharedSettingsModel, appsettings: AppSettingsModel):
         """Initializes the wallpaper changer. Loads all wallpapers."""
+        self._appsettings = appsettings
         self.settings = settings
         self.prev_counter = 1
-        self.wpstore = WallpaperDAO()
-        self.download_dir = utils.get_download_dir()
-        self.prettified_dir = utils.get_prettified_dir()
+        self.wpstore = WallpaperDAO(appsettings)
         self.providers = []
         self.download_queue : List[DownloadThread] = []
+
+    def set_appsettings(self, appsettings: AppSettingsModel):
+        self._appsettings = appsettings
+        self.wpstore.set_appsettings(appsettings)
 
     def reload_wallpaper_list(self):
         """
@@ -76,7 +79,7 @@ class WallpaperChangingManager:
         """
         with QMutexLocker(_mutex):
             wpsources = self.wpstore.get_sources(only_enabled=True)
-            self.providers = provider.get_providers(wpsources, self.wpstore, self.download_dir)
+            self.providers = provider.get_providers(wpsources, self.wpstore, self._appsettings.download_dir)
             for prov in self.providers:
                 prov.reload()
             self.download_queue.clear()
@@ -88,7 +91,7 @@ class WallpaperChangingManager:
             for _ in range(nr):
                 (pid, wallpaper) = self._get_next_random()
                 if wallpaper is not None:
-                    thread = DownloadThread(pid, wallpaper, self.download_dir)
+                    thread = DownloadThread(pid, wallpaper, self._appsettings.download_dir)
                     thread.start()
                     self.download_queue.append(thread)
 
@@ -181,7 +184,7 @@ class WallpaperChangingManager:
                 format = 'jpeg'
                 imname = Path(im).name
                 imname = os.path.splitext(imname)[0]+'.'+format
-                target = os.path.join(self.prettified_dir, imname)
+                target = os.path.join(self._appsettings.prettify_dir, imname)
                 if ImageUtils.make_pretty(image, target, repeat_background=repeat_background_enabled,
                                           blend_edges=blend_edges_enabled, blur_background=blur_background_enabled,
                                           width=wallpaper_width, height=wallpaper_height, sigma=blur_amount,

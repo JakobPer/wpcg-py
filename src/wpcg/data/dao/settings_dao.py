@@ -8,7 +8,7 @@ import json
 
 from PySide6.QtCore import QMutex, QMutexLocker
 
-from wpcg.data.model.settings_model import SettingsModel
+from wpcg.data.model.settings_model import *
 import wpcg.utils.utils as utils
 
 
@@ -23,22 +23,40 @@ class SettingsDAO:
         """
         Creates the necessary tables in the database.
         """
-        self._database_url = os.path.join(utils.get_app_dir(), "settings.json")
+        self._app_settings_path = os.path.join(utils.get_app_dir(), "appsettings.json")
 
-    def load(self) -> SettingsModel:
-        if not os.path.exists(self._database_url):
-            settings = SettingsModel()
-            self.save(settings)
+    def load_app_settings(self) -> AppSettingsModel:
+        if not os.path.exists(self._app_settings_path):
+            appsettings = AppSettingsModel()
+            self.save_app_settings(appsettings)
+            return appsettings
+        else:
+            with QMutexLocker(_mutex):
+                with open(self._app_settings_path, "r") as file:
+                    content = json.load(file)
+                    return AppSettingsModel(**content)
+
+    def save_app_settings(self, appsettings: AppSettingsModel) -> None:
+        with QMutexLocker(_mutex):
+            with open(self._app_settings_path, "w") as file:
+                json.dump(appsettings.__dict__, file, indent=4)
+
+    def load_shared(self, appsettings: AppSettingsModel) -> SharedSettingsModel:
+        settings_file = os.path.join(appsettings.base_dir, "settings.json")
+        if not os.path.exists(settings_file):
+            settings = SharedSettingsModel()
+            self.save_shared(settings)
             return settings
         else:
             with QMutexLocker(_mutex):
-                with  open(self._database_url, "r") as file:
+                with  open(settings_file, "r") as file:
                     content = json.load(file)
-                    return SettingsModel(**content)
+                    return SharedSettingsModel(**content)
 
 
-    def save(self, settings: SettingsModel) -> None:
+    def save_shared(self, settings: SharedSettingsModel, appsettings: AppSettingsModel) -> None:
+        settings_file = os.path.join(appsettings.base_dir, "settings.json")
         with QMutexLocker(_mutex):
-            with open(self._database_url, "w") as file:
+            with open(settings_file, "w") as file:
                 json.dump(settings.__dict__, file, indent=4)
 

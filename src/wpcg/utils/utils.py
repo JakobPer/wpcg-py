@@ -23,22 +23,22 @@ def get_app_dir():
     return str(app_dir)
 
 
-def get_download_dir():
+def get_download_dir(app_dir: str):
     """
     :return: The absolute path to the app download directory.
     """
-    app_dir = Path(get_app_dir())
+    app_dir = Path(app_dir)
     download_dir = app_dir.joinpath("downloaded")
     if not download_dir.exists():
         download_dir.mkdir()
 
     return str(download_dir)
 
-def get_prettified_dir():
+def get_prettified_dir(download_dir: str):
     """
     :return: The absolute path to the app download directory.
     """
-    download_dir = Path(get_download_dir())
+    download_dir = Path(download_dir)
     prettified_dir = download_dir.joinpath('prettified')
     if not prettified_dir.exists():
         prettified_dir.mkdir()
