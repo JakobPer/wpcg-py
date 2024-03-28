@@ -16,6 +16,7 @@ from typing import Callable, List, Tuple
 import requests
 
 from wpcg.data.providers import provider
+from wpcg.data.providers.provider import Wallpaper
 from wpcg.data.model.settings_model import SharedSettingsModel, AppSettingsModel
 from wpcg.data.dao.wallpaper_dao import WallpaperDAO
 from wpcg.utils import utils
@@ -33,24 +34,24 @@ class DownloadThread(QThread):
 
     progress = Signal(float)
 
-    def __init__(self,provider_id: int, url: str, download_dir:str) -> None:
+    def __init__(self,provider_id: int, wallpaper: Wallpaper, download_dir:str) -> None:
         super().__init__()
-        self.url = url
+        self.wallpaper = wallpaper
         self.provider_id = provider_id
         self.download_dir = download_dir
         self.downloaded_file:str = None
 
     def run(self) -> None:
-        if self.url.startswith('http'):
+        if self.wallpaper.uri.startswith('http'):
             try:
-                logging.debug("Downloading {0}".format(self.url))
-                self.downloaded_file = utils.download_file(self.url, self.download_dir, self.progress.emit)
-                logging.debug("Downloading {0} finished".format(self.url))
+                logging.debug("Downloading {0}".format(self.wallpaper.uri))
+                self.downloaded_file = utils.download_file(self.wallpaper.uri, self.download_dir, self.progress.emit)
+                logging.debug("Downloading {0} finished".format(self.wallpaper.uri))
             except Exception as e:
-                logging.error("Failed to download {0}".format(self.url))
+                logging.error("Failed to download {0}".format(self.wallpaper.uri))
                 logging.error(e)
         else: # It's a local file (ToDo make better handling than creating a thread for local files)
-            self.downloaded_file = self.url
+            self.downloaded_file = self.wallpaper.uri
 
 
 class WallpaperChangingManager:
@@ -89,13 +90,13 @@ class WallpaperChangingManager:
         if len(self.download_queue) < self.settings.predownload_count:
             nr = max(self.settings.predownload_count, 1) - len(self.download_queue)
             for _ in range(nr):
-                (pid, wallpaper) = self._get_next_random()
+                (provider_id, wallpaper) = self._get_next_random()
                 if wallpaper is not None:
-                    thread = DownloadThread(pid, wallpaper, self._appsettings.download_dir)
+                    thread = DownloadThread(provider_id, wallpaper, self._appsettings.download_dir)
                     thread.start()
                     self.download_queue.append(thread)
 
-    def _get_next_random(self) -> tuple[int, str]:
+    def _get_next_random(self) -> tuple[int, Wallpaper]:
             rand = random.randrange(0, len(self.providers))
             return (rand, self.providers[rand].get_next())
 
@@ -121,16 +122,17 @@ class WallpaperChangingManager:
 
             self._predownload() # fill queue again immediatelly so download starts as early as possible
 
-            wallpaper = thread.downloaded_file
+            wallpaper = thread.wallpaper
+            wallpaper_file = thread.downloaded_file
 
-            if wallpaper is None:
+            if wallpaper_file is None:
                 return False
 
             self.prev_counter = 1
-            self._set_wallpaper(wallpaper)
-            self.wpstore.add_history_entry(wallpaper, self.providers[thread.provider_id].source.sid)
+            self._set_wallpaper(wallpaper_file)
+            self.wpstore.add_history_entry(wallpaper.key, self.providers[thread.provider_id].source.sid)
 
-            logging.debug("set wallpaper to: %s" % wallpaper)
+            logging.debug("set wallpaper to: %s" % wallpaper_file)
 
             return True
 

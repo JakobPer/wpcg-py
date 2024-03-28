@@ -83,24 +83,24 @@ class WallpaperDAO:
             conn.close()
             return ret
 
-    def get_previous(self, index: int) -> string:
+    def get_previous(self, index: int) -> tuple[str, int]:
         """
         Returns the last added wallpaper of the history.
 
         :param index: the index counting back from the last added history entry (0: last, 1: second last, 2: third
         last, ...)
-        :return: the path to the last wallpaper depending on the index or None if none was found.
+        :return: the key of the last wallpaper depending on the index or None if none was found including the provider index.
         """
         with QtCore.QMutexLocker(_mutex):
             conn = self.__connect()
             c = conn.cursor()
-            ret = c.execute("Select uri from history where pk = (select max(pk) from history) - ?", [index])
+            ret = c.execute("Select uri, sourceid from history where pk = (select max(pk) from history) - ?", [index])
             entry = ret.fetchone()
             conn.close()
             if entry is None:
                 return None
             else:
-                return entry[0]
+                return (entry[0], int(entry[1]))
 
     def is_in_history(self, uri: string, ignored: bool = False):
         """

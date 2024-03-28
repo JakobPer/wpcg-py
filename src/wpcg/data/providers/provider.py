@@ -8,12 +8,18 @@ import urllib.request
 from urllib3.util.url import *
 
 from wpcg.business.manager.wallpaper_changing_manager import *
+from wpcg.business.manager.wallpaper_changing_manager import Wallpaper
 from wpcg.data.dao.wallpaper_dao import WallpaperDAO
 from wpcg.data.model.wallpaper_source_model import WallpaperSourceModel
 
 from typing import List
 
 import requests
+
+class Wallpaper:
+    def __init__(self, key: str, uri: str) -> None:
+        self.key = key
+        self.uri = uri
 
 
 class Provider:
@@ -26,8 +32,11 @@ class Provider:
     def reload(self, was_empty = False):
         pass
 
-    def get_next(self) -> str:
+    def get_next(self) -> Wallpaper:
         return ""
+
+    def get_by_key(self, key: str) -> Wallpaper:
+        return None
 
     @staticmethod
     def is_image(img: str):
@@ -68,14 +77,14 @@ class FileProvider(Provider):
 
         random.shuffle(self.wplist)
 
-    def get_next(self) -> str:
+    def get_next(self) -> Wallpaper:
         if len(self.wplist) == 0:
             logging.debug("used all wallpapers, reloading")
             self.wpstore.ignore_all_by_sourceid(self.source.sid)
             self.reload()
             if len(self.wplist) == 0:  # we really did not find any
                 logging.warning("no usable wallpapers found")
-                return
+                return None
 
         target = self.wplist[0]
         self.wplist.remove(target)
@@ -83,7 +92,10 @@ class FileProvider(Provider):
         if not os.path.isfile(target):
             return None
 
-        return target
+        return Wallpaper(key = target, uri = target)
+
+    def get_by_key(self, key: str) -> Wallpaper:
+        return Wallpaper(key, key) # key is the path
 
 class ZeroChanProvider(Provider):
 
@@ -127,6 +139,20 @@ class ZeroChanProvider(Provider):
 
         random.shuffle(self.wplist)
 
+    def _get_by_id(self, id):
+        url = "https://zerochan.net/" + str(id) +"?json"
+
+        try:
+            r = requests.get(url, headers=self._request_headers )
+            json = r.json()
+            url = json['full']
+            return Wallpaper(key=id, uri=url)
+
+        except Exception as e:
+            logging.error("Could not get zerochan page %s", url)
+            logging.error(str(e))
+            return None
+
     def get_next(self) -> str:
         if len(self.wplist) == 0:
             logging.debug("used all wallpapers, reloading")
@@ -137,17 +163,10 @@ class ZeroChanProvider(Provider):
                 return
         
         id = self.wplist.pop()
-        url = "https://zerochan.net/" + str(id) +"?json"
+        return self._get_by_id(id)
 
-        try:
-            r = requests.get(url, headers=self._request_headers )
-            json = r.json()
-            url = json['full']
-            return url
-
-        except Exception as e:
-            logging.error("Could not get zerochan page %s", url)
-            logging.error(str(e))
+    def get_by_key(self, key: str) -> Wallpaper:
+        return self._get_by_id(key)
 
 
 def get_providers(sources: List[WallpaperSourceModel], wp_dao: WallpaperDAO, wallpaper_dir: str) \
